@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Home Weather Station</string>
+
+    <string name="temperatureOutdoorSensorValue">%1$s°C</string>
+    <string name="temperatureIndoorSensorValue">%1$s°C (Indoor)</string>
+    <string name="pressureSensorValue">%1$smm Hg</string>
+    <string name="humiditySensorValue">%1$s %%</string>
+
+    <string name="dateInfoView">Information of %1$s (%2$s)</string>
+    <string name="maxValuePeriod"> Max value %1$s%2$s appeared at %3$s</string>
+    <string name="minValuePeriod"> Min value %1$s%2$s appeared at %3$s</string>
+    <string name="averageValuePeriod"> Average  value %1$s%2$s </string>
+    <string name="noDataMessage">No data for %1$s</string>
+
+    <string name="formatDT">dd/MM HH:mm</string>
+    <string name="periodView">%1$s - %2$s</string>
+
+</resources>

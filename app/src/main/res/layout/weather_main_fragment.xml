@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/weather_main_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            tools:ignore="MissingConstraints" />
+
+    <ScrollView
+
+            android:id="@+id/weather_info"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                >
+
+            <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                    android:id="@+id/imageViewTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintBottom_toTopOf="@+id/divider1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_temperature" />
+
+            <TextView
+                    android:id="@+id/temperatureOutdoorTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperature"
+                    app:layout_constraintEnd_toStartOf="@+id/listTempOutdoorImageButton"
+                    app:layout_constraintStart_toEndOf="@+id/imageViewTemperature"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperature" />
+
+            <ImageButton
+                    android:id="@+id/listTempOutdoorImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperature"
+                    app:layout_constraintEnd_toStartOf="@+id/graphTempOutdoorImageButton"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperature" />
+
+            <ImageButton
+                    android:id="@+id/graphTempOutdoorImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:src="@drawable/ic_bar_chart"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperature"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperature" />
+
+            <View
+                    android:id="@+id/divider1"
+                    android:layout_width="395dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="?android:attr/listDivider"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewTemperature" />
+
+            <ImageView
+                    android:id="@+id/imageViewPressure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintBottom_toTopOf="@+id/divider2"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    app:layout_constraintTop_toBottomOf="@+id/divider1"
+                    app:srcCompat="@drawable/ic_pressure" />
+
+            <TextView
+                    android:id="@+id/pressureTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPressure"
+                    app:layout_constraintEnd_toStartOf="@+id/listPressureImageButton"
+                    app:layout_constraintStart_toEndOf="@+id/imageViewPressure"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewPressure" />
+
+            <ImageButton
+                    android:id="@+id/listPressureImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPressure"
+                    app:layout_constraintEnd_toStartOf="@+id/graphPressureImageButton"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewPressure" />
+
+            <ImageButton
+                    android:id="@+id/graphPressureImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:src="@drawable/ic_bar_chart"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPressure"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewPressure" />
+
+            <View
+                    android:id="@+id/divider2"
+                    android:layout_width="395dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="?android:attr/listDivider"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewPressure" />
+
+            <ImageView
+                    android:id="@+id/imageViewHumidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider2"
+                    app:srcCompat="@drawable/ic_humidity" />
+
+            <TextView
+                    android:id="@+id/humidityTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewHumidity"
+                    app:layout_constraintEnd_toStartOf="@+id/listHumidityImageButton"
+                    app:layout_constraintStart_toEndOf="@+id/imageViewHumidity"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewHumidity" />
+
+            <ImageButton
+                    android:id="@+id/listHumidityImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewHumidity"
+                    app:layout_constraintEnd_toStartOf="@+id/graphHumidityImageButton"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewHumidity" />
+
+            <ImageButton
+                    android:id="@+id/graphHumidityImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:src="@drawable/ic_bar_chart"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewHumidity"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewHumidity" />
+
+            <View
+                    android:id="@+id/divider3"
+                    android:layout_width="395dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="?android:attr/listDivider"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewHumidity" />
+
+            <ImageView
+                    android:id="@+id/imageViewTemperatureIndoor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider3"
+                    app:srcCompat="@drawable/ic_temperature" />
+
+            <TextView
+                    android:id="@+id/temperatureIndoorTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperatureIndoor"
+                    app:layout_constraintEnd_toStartOf="@+id/listTemperatureIndoorImageButton"
+                    app:layout_constraintStart_toEndOf="@+id/imageViewTemperatureIndoor"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperatureIndoor" />
+
+            <ImageButton
+                    android:id="@+id/listTemperatureIndoorImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperatureIndoor"
+                    app:layout_constraintEnd_toStartOf="@+id/graphTemperatureIndoorImageButton"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperatureIndoor" />
+
+            <ImageButton
+                    android:id="@+id/graphTemperatureIndoorImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:src="@drawable/ic_bar_chart"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperatureIndoor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperatureIndoor" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/is_switch_of_bulb_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="45dp"
+            app:backgroundTint="@color/design_default_color_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_lamp_on" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/is_switch_of_bulb_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="45dp"
+            app:backgroundTint="@color/design_default_color_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_lamp_off" />
+</androidx.constraintlayout.widget.ConstraintLayout>
