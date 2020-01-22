@@ -1,6 +1,5 @@
 package m.kampukter.homeweatherstation.ui
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -11,15 +10,14 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.sensor_list_fragment.*
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
-import m.kampukter.homeweatherstation.data.InfoSensor
 import m.kampukter.homeweatherstation.data.RequestPeriod
 import m.kampukter.homeweatherstation.data.ResultInfoSensor
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
 import java.util.*
 
 class ListSensorInfoFragment : Fragment() {
@@ -48,9 +46,8 @@ class ListSensorInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val format = SimpleDateFormat("yyyy-MM-dd")
-        var currentDay = Date()
-        val strDateEnd = format.format(currentDay)
+        var strDateBegin = DateFormat.format("yyyy-MM-dd", Date()).toString()
+        var strDateEnd = strDateBegin
         val sensorInformation = viewModel.getInfoBySensor(searchSensor)
 
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
@@ -71,21 +68,38 @@ class ListSensorInfoFragment : Fragment() {
             adapter = listSensorInfoAdapter
         }
         if (sensorInformation != null)
-            viewModel.getQuestionInfoSensor(RequestPeriod(sensorInformation.sensorName, strDateEnd, strDateEnd))
+            viewModel.getQuestionInfoSensor(
+                RequestPeriod(
+                    sensorInformation.sensorName,
+                    strDateEnd,
+                    strDateEnd
+                )
+            )
         progressBar.visibility = View.VISIBLE
         viewModel.infoSensor.observe(this, Observer { infoSensorList ->
             when (infoSensorList) {
                 is ResultInfoSensor.Success -> {
                     progressBar.visibility = View.GONE
+                    val begTime =
+                        DateFormat.format(
+                            getString(R.string.formatDT),
+                            infoSensorList.infoSensor.first().date * 1000L
+                        )
+                    val endTime =
+                        DateFormat.format(
+                            getString(R.string.formatDT),
+                            infoSensorList.infoSensor.last().date * 1000L
+                        )
                     dateTextView.text =
                         getString(
                             R.string.dateInfoView,
-                            DateFormat.format("dd/MM/yyyy", currentDay),
+                            begTime.toString(),
+                            endTime.toString(),
                             sensorInformation?.id
                         )
                     val dateMax =
                         infoSensorList.infoSensor.maxBy { it.value }?.date?.let { time ->
-                            DateFormat.format("HH:mm", time * 1000L)
+                            DateFormat.format("dd/MM/yy HH:mm", time * 1000L)
                         }
                     maxTextView.text = getString(
                         R.string.maxValuePeriod,
@@ -96,7 +110,7 @@ class ListSensorInfoFragment : Fragment() {
 
                     val dateMin =
                         infoSensorList.infoSensor.minBy { it.value }?.date?.let { time ->
-                            DateFormat.format("HH:mm", time * 1000L)
+                            DateFormat.format("dd/MM/yy HH:mm", time * 1000L)
                         }
                     minTextView.text = getString(
                         R.string.minValuePeriod,
@@ -124,13 +138,14 @@ class ListSensorInfoFragment : Fragment() {
                     dateTextView.text =
                         getString(
                             R.string.dateInfoView,
-                            DateFormat.format("dd/MM/yyyy", currentDay),
+                            strDateBegin,
+                            strDateEnd,
                             sensorInformation?.id
                         )
-                    listSensorInfoAdapter?.setList(emptyList<InfoSensor>())
+                    listSensorInfoAdapter?.setList(emptyList())
                     Snackbar.make(
                         sensor1_fragment,
-                        getString(R.string.noDataMessage, DateFormat.format("dd/MM/yyyy", currentDay)),
+                        getString(R.string.noDataMessage, strDateBegin, strDateEnd),
                         Snackbar.LENGTH_LONG
                     ).show()
 
@@ -139,26 +154,23 @@ class ListSensorInfoFragment : Fragment() {
             }
         })
         calendarFAB.setOnClickListener {
-
-
-            val c = Calendar.getInstance()
-            val dateSetListener = DatePickerDialog.OnDateSetListener { _,
-                                                                       year, monthOfYear, dayOfMonth ->
-                c.set(Calendar.YEAR, year)
-                c.set(Calendar.MONTH, monthOfYear)
-                c.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                currentDay = c.time
-                val searchDate = format.format(c.time)
-                if (sensorInformation != null)
-                    viewModel.getQuestionInfoSensor(RequestPeriod(sensorInformation.sensorName, searchDate, searchDate))
+            val pickerRange = MaterialDatePicker.Builder.dateRangePicker()
+                .build()
+            pickerRange.addOnPositiveButtonClickListener { pair ->
+                pair.first?.let{strDateBegin = DateFormat.format("yyyy-MM-dd", it).toString()}
+                pair.second?.let{strDateEnd = DateFormat.format("yyyy-MM-dd", it).toString()}
+                sensorInformation?.let {
+                    viewModel.getQuestionInfoSensor(
+                        RequestPeriod(
+                            it.sensorName,
+                            strDateBegin,
+                            strDateEnd
+                        )
+                    )
+                }
                 progressBar.visibility = View.VISIBLE
             }
-
-            fragmentManager?.let {
-                DatePickerFragment.create(dateSetListener)
-                    .show(it, "datePicker")
-            }
+            fragmentManager?.let { pickerRange.show(it, pickerRange.toString()) }
         }
     }
 

@@ -1,10 +1,7 @@
 package m.kampukter.homeweatherstation.ui
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.*
@@ -15,13 +12,13 @@ import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.RequestPeriod
 import m.kampukter.homeweatherstation.data.Sensor
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
 import androidx.lifecycle.Observer
-import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.sensor_graph_fragment.*
+import kotlinx.android.synthetic.main.sensor_graph_fragment.toolbar
 import kotlinx.android.synthetic.main.sensor_list_fragment.progressBar
 import m.kampukter.homeweatherstation.data.ResultInfoSensor
 import java.util.*
@@ -34,10 +31,9 @@ class GraphSensorInfoFragment : Fragment() {
     private var searchSensor: String? = null
     private var sensorInformation: Sensor? = null
 
-    private val format = SimpleDateFormat("yyyy-MM-dd")
-    private var currentDay = Date()
-    private var strDateBegin: String = format.format(Date(currentDay.time - (1000 * 60 * 60 * 24)))
-    private var strDateEnd: String = format.format(currentDay)
+    private var strDateBegin: String =
+        DateFormat.format("yyyy-MM-dd", Date(Date().time - (1000 * 60 * 60 * 24))).toString()
+    private var strDateEnd: String = DateFormat.format("yyyy-MM-dd", Date()).toString()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -105,7 +101,11 @@ class GraphSensorInfoFragment : Fragment() {
                 }
                 is ResultInfoSensor.EmptyResponse -> {
                     progressBar.visibility = View.GONE
-                    Log.d("blablabla", "EmptyResponse")
+                    Snackbar.make(
+                        sensor_graph_fragment,
+                        getString(R.string.noDataMessage, strDateBegin, strDateEnd),
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 }
             }
         })
@@ -124,8 +124,8 @@ class GraphSensorInfoFragment : Fragment() {
             val pickerRange = MaterialDatePicker.Builder.dateRangePicker()
                 .build()
             pickerRange.addOnPositiveButtonClickListener { pair ->
-                strDateBegin = format.format(pair.first)
-                strDateEnd = format.format(pair.second)
+                pair.first?.let { strDateBegin = DateFormat.format("yyyy-MM-dd", it).toString() }
+                pair.second?.let { strDateEnd = DateFormat.format("yyyy-MM-dd", it).toString() }
                 sensorInformation?.let {
                     viewModel.getQuestionInfoSensor(
                         RequestPeriod(
@@ -144,78 +144,6 @@ class GraphSensorInfoFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putStringArray(KEY_SELECTED_PERIOD, arrayOf(strDateBegin, strDateEnd))
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_graph_view_settings, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_last_day -> {
-                strDateBegin = format.format(Date(currentDay.time - (1000 * 60 * 60 * 24)))
-                strDateEnd = format.format(currentDay)
-                sensorInformation?.let {
-                    viewModel.getQuestionInfoSensor(
-                        RequestPeriod(
-                            it.sensorName,
-                            strDateBegin,
-                            strDateEnd
-                        )
-                    )
-                }
-                progressBar.visibility = View.VISIBLE
-                return true
-            }
-            R.id.action_last_week -> {
-                strDateBegin = format.format(Date(currentDay.time - (1000 * 60 * 60 * 24 * 7)))
-                strDateEnd = format.format(currentDay)
-                sensorInformation?.let {
-                    viewModel.getQuestionInfoSensor(
-                        RequestPeriod(
-                            it.sensorName,
-                            strDateBegin,
-                            strDateEnd
-                        )
-                    )
-                }
-                progressBar.visibility = View.VISIBLE
-                return true
-            }
-            R.id.action_month -> {
-                val c = Calendar.getInstance()
-                val dateSetListener = DatePickerDialog.OnDateSetListener { _,
-                                                                           year, monthOfYear, _ ->
-                    c.set(Calendar.YEAR, year)
-                    c.set(Calendar.MONTH, monthOfYear)
-                    c.set(Calendar.DAY_OF_MONTH, 1)
-                    strDateBegin = format.format(c.time)
-                    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH))
-                    strDateEnd = format.format(c.time)
-                    sensorInformation?.let {
-                        viewModel.getQuestionInfoSensor(
-                            RequestPeriod(
-                                it.sensorName,
-                                strDateBegin,
-                                strDateEnd
-                            )
-                        )
-                    }
-                    progressBar.visibility = View.VISIBLE
-                }
-
-                fragmentManager?.let {
-                    MonthDatePickerFragment.create(dateSetListener)
-                        .show(it, "datePicker")
-                }
-
-                return true
-            }
-            else -> {
-                return super.onOptionsItemSelected(item)
-            }
-        }
     }
 
 

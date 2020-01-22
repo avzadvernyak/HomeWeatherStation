@@ -9,7 +9,7 @@ import m.kampukter.homeweatherstation.data.InfoSensor
 class ListSensorInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(result: InfoSensor) {
         with(itemView) {
-            dateTimeTextView.text = DateFormat.format("HH:mm", result.date * 1000L)
+            dateTimeTextView.text = DateFormat.format("dd/MM/yyyy HH:mm", result.date * 1000L)
             //dateTimeTextView.text = result.date.toString()
             valueTextView.text = result.value.toString()
         }
