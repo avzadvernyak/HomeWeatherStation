@@ -19,14 +19,15 @@ import m.kampukter.homeweatherstation.data.RequestPeriod
 import m.kampukter.homeweatherstation.data.ResultInfoSensor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-
+private const val KEY_SELECTED_PERIOD = "KEY_SELECTED_PERIOD"
 class ListSensorInfoFragment : Fragment() {
 
     private val viewModel by viewModel<MyViewModel>()
     private var listSensorInfoAdapter: ListSensorInfoAdapter? = null
 
     private var searchSensor: String = ""
-
+    var strDateBegin = DateFormat.format("yyyy-MM-dd", Date()).toString()
+    var strDateEnd = strDateBegin
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -46,8 +47,6 @@ class ListSensorInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        var strDateBegin = DateFormat.format("yyyy-MM-dd", Date()).toString()
-        var strDateEnd = strDateBegin
         val sensorInformation = viewModel.getInfoBySensor(searchSensor)
 
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
@@ -55,6 +54,13 @@ class ListSensorInfoFragment : Fragment() {
             title = sensorInformation?.id
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+        }
+
+        savedInstanceState?.let { bundle ->
+            bundle.getStringArray(KEY_SELECTED_PERIOD)?.let { saveDate ->
+                strDateBegin = saveDate[0]
+                strDateEnd = saveDate[1]
+            }
         }
 
         listSensorInfoAdapter = ListSensorInfoAdapter()
@@ -71,7 +77,7 @@ class ListSensorInfoFragment : Fragment() {
             viewModel.getQuestionInfoSensor(
                 RequestPeriod(
                     sensorInformation.sensorName,
-                    strDateEnd,
+                    strDateBegin,
                     strDateEnd
                 )
             )
@@ -154,11 +160,11 @@ class ListSensorInfoFragment : Fragment() {
             }
         })
         calendarFAB.setOnClickListener {
-            val pickerRange = MaterialDatePicker.Builder.dateRangePicker()
-                .build()
-            pickerRange.addOnPositiveButtonClickListener { pair ->
-                pair.first?.let{strDateBegin = DateFormat.format("yyyy-MM-dd", it).toString()}
-                pair.second?.let{strDateEnd = DateFormat.format("yyyy-MM-dd", it).toString()}
+            val pickerRange = MaterialDatePicker.Builder.dateRangePicker().build()
+            pickerRange.addOnPositiveButtonClickListener { dateSelected  ->
+                Log.d("blablabla", "************************")
+                dateSelected .first?.let{strDateBegin = DateFormat.format("yyyy-MM-dd", it).toString()}
+                dateSelected .second?.let{strDateEnd = DateFormat.format("yyyy-MM-dd", it).toString()}
                 sensorInformation?.let {
                     viewModel.getQuestionInfoSensor(
                         RequestPeriod(
@@ -172,6 +178,10 @@ class ListSensorInfoFragment : Fragment() {
             }
             fragmentManager?.let { pickerRange.show(it, pickerRange.toString()) }
         }
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putStringArray(KEY_SELECTED_PERIOD, arrayOf(strDateBegin, strDateEnd))
+        super.onSaveInstanceState(outState)
     }
 
     companion object {
