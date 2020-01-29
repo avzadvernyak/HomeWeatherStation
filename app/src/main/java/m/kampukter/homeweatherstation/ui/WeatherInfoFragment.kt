@@ -13,7 +13,10 @@ import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+var startValue: Boolean = true
+
 class WeatherInfoFragment : Fragment() {
+
 
     private val viewModel by viewModel<MyViewModel>()
 
@@ -65,7 +68,9 @@ class WeatherInfoFragment : Fragment() {
             ).show()
         })
         viewModel.isStatusWS.observe(this, Observer { isStatus ->
+
             if (isStatus) {
+                startValue = false
                 Snackbar.make(
                     weather_info,
                     "Handshake with WS successfull",
@@ -84,6 +89,12 @@ class WeatherInfoFragment : Fragment() {
                 pressureTextView.text = "\u221E"
                 humidityTextView.text = "\u221E"
                 temperatureIndoorTextView.text = "\u221E"
+
+                if (startValue) {
+                    progressBar.visibility = View.VISIBLE
+                    viewModel.setCurrentSite(2)
+                    startValue = false
+                }
             }
         })
 

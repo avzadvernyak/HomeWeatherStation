@@ -262,7 +262,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_lamp_on"
-            app:tint = "@color/colorAccent"
+            app:tint = "@android:color/holo_red_light"
             />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

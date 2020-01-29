@@ -14,6 +14,7 @@ class MainApplication: Application() {
         single { InfoSensorRepository() }
         viewModel { MyViewModel( get(), get() )}
     }
+
     override fun onCreate() {
         super.onCreate()
         startKoin {

@@ -19,15 +19,18 @@ import m.kampukter.homeweatherstation.data.RequestPeriod
 import m.kampukter.homeweatherstation.data.ResultInfoSensor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+
 private const val KEY_SELECTED_PERIOD = "KEY_SELECTED_PERIOD"
+
 class ListSensorInfoFragment : Fragment() {
 
     private val viewModel by viewModel<MyViewModel>()
+
     private var listSensorInfoAdapter: ListSensorInfoAdapter? = null
 
     private var searchSensor: String = ""
-    var strDateBegin = DateFormat.format("yyyy-MM-dd", Date()).toString()
-    var strDateEnd = strDateBegin
+    private var strDateBegin = DateFormat.format("yyyy-MM-dd", Date()).toString()
+    private var strDateEnd = strDateBegin
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,13 +52,35 @@ class ListSensorInfoFragment : Fragment() {
 
         val sensorInformation = viewModel.getInfoBySensor(searchSensor)
 
+
+        @Suppress("UNCHECKED_CAST")
+        val pickerRange: MaterialDatePicker<androidx.core.util.Pair<Long, Long>> =
+            fragmentManager?.findFragmentByTag("Picker") as? MaterialDatePicker<androidx.core.util.Pair<Long, Long>>
+                ?: MaterialDatePicker.Builder.dateRangePicker().build()
+
+        pickerRange.addOnPositiveButtonClickListener { dateSelected ->
+            dateSelected.first?.let {
+                strDateBegin = DateFormat.format("yyyy-MM-dd", it).toString()
+            }
+            dateSelected.second?.let { strDateEnd = DateFormat.format("yyyy-MM-dd", it).toString() }
+            sensorInformation?.let {
+                viewModel.getQuestionInfoSensor(
+                    RequestPeriod(
+                        it.sensorName,
+                        strDateBegin,
+                        strDateEnd
+                    )
+                )
+            }
+            progressBar.visibility = View.VISIBLE
+        }
+
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar?.apply {
             title = sensorInformation?.id
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-
         savedInstanceState?.let { bundle ->
             bundle.getStringArray(KEY_SELECTED_PERIOD)?.let { saveDate ->
                 strDateBegin = saveDate[0]
@@ -159,26 +184,15 @@ class ListSensorInfoFragment : Fragment() {
                 }
             }
         })
+
+
+
         calendarFAB.setOnClickListener {
-            val pickerRange = MaterialDatePicker.Builder.dateRangePicker().build()
-            pickerRange.addOnPositiveButtonClickListener { dateSelected  ->
-                Log.d("blablabla", "************************")
-                dateSelected .first?.let{strDateBegin = DateFormat.format("yyyy-MM-dd", it).toString()}
-                dateSelected .second?.let{strDateEnd = DateFormat.format("yyyy-MM-dd", it).toString()}
-                sensorInformation?.let {
-                    viewModel.getQuestionInfoSensor(
-                        RequestPeriod(
-                            it.sensorName,
-                            strDateBegin,
-                            strDateEnd
-                        )
-                    )
-                }
-                progressBar.visibility = View.VISIBLE
-            }
-            fragmentManager?.let { pickerRange.show(it, pickerRange.toString()) }
+
+            fragmentManager?.let { pickerRange.show(it, "Picker") }
         }
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putStringArray(KEY_SELECTED_PERIOD, arrayOf(strDateBegin, strDateEnd))
         super.onSaveInstanceState(outState)

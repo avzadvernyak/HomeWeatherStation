@@ -54,6 +54,28 @@ class GraphSensorInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        @Suppress("UNCHECKED_CAST")
+        val pickerRange: MaterialDatePicker<androidx.core.util.Pair<Long, Long>> =
+            fragmentManager?.findFragmentByTag("Picker") as? MaterialDatePicker<androidx.core.util.Pair<Long, Long>>
+                ?: MaterialDatePicker.Builder.dateRangePicker().build()
+
+        pickerRange.addOnPositiveButtonClickListener { dateSelected ->
+            dateSelected.first?.let {
+                strDateBegin = DateFormat.format("yyyy-MM-dd", it).toString()
+            }
+            dateSelected.second?.let { strDateEnd = DateFormat.format("yyyy-MM-dd", it).toString() }
+            sensorInformation?.let {
+                viewModel.getQuestionInfoSensor(
+                    RequestPeriod(
+                        it.sensorName,
+                        strDateBegin,
+                        strDateEnd
+                    )
+                )
+            }
+            progressBar.visibility = View.VISIBLE
+        }
+
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar?.apply {
             title = sensorInformation?.id
@@ -120,24 +142,9 @@ class GraphSensorInfoFragment : Fragment() {
                 title = it.measure
             }
         }
+
         dateRangeFAB.setOnClickListener {
-            val pickerRange = MaterialDatePicker.Builder.dateRangePicker()
-                .build()
-            pickerRange.addOnPositiveButtonClickListener { pair ->
-                pair.first?.let { strDateBegin = DateFormat.format("yyyy-MM-dd", it).toString() }
-                pair.second?.let { strDateEnd = DateFormat.format("yyyy-MM-dd", it).toString() }
-                sensorInformation?.let {
-                    viewModel.getQuestionInfoSensor(
-                        RequestPeriod(
-                            it.sensorName,
-                            strDateBegin,
-                            strDateEnd
-                        )
-                    )
-                }
-                progressBar.visibility = View.VISIBLE
-            }
-            fragmentManager?.let { pickerRange.show(it, pickerRange.toString()) }
+            fragmentManager?.let { pickerRange.show(it, "Picker") }
         }
     }
 

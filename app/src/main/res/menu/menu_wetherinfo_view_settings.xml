@@ -4,4 +4,6 @@
             android:title="109.254.66.131"/>
     <item  android:id="@+id/action_lan_server"
             android:title="192.168.0.82"/>
+    <item  android:id="@+id/action_test"
+            android:title="Test"/>
 </menu>
