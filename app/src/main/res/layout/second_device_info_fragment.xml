@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/weather_main_fragment"
+        android:id="@+id/second_device_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+
+    <include
+            android:id="@+id/statusSecond"
+            layout="@layout/status_info_bar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            tools:ignore="MissingConstraints" />
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/device_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
 
-            android:id="@+id/weather_info"
+            android:id="@+id/device_info"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            app:layout_constraintTop_toBottomOf="@id/statusSecond">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,26 +33,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"
-                >
-
-            <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="parent">
 
             <ImageView
-                    android:id="@+id/imageViewTemperature"
+                    android:id="@+id/temperatureImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -60,34 +47,34 @@
                     app:srcCompat="@drawable/ic_temperature" />
 
             <TextView
-                    android:id="@+id/temperatureOutdoorTextView"
+                    android:id="@+id/temperatureTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperature"
-                    app:layout_constraintEnd_toStartOf="@+id/listTempOutdoorImageButton"
-                    app:layout_constraintStart_toEndOf="@+id/imageViewTemperature"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperature" />
+                    app:layout_constraintBottom_toBottomOf="@+id/temperatureImageView"
+                    app:layout_constraintEnd_toStartOf="@+id/listTemperatureImageButton"
+                    app:layout_constraintStart_toEndOf="@+id/temperatureImageView"
+                    app:layout_constraintTop_toTopOf="@+id/temperatureImageView" />
 
             <ImageButton
-                    android:id="@+id/listTempOutdoorImageButton"
+                    android:id="@+id/listTemperatureImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperature"
-                    app:layout_constraintEnd_toStartOf="@+id/graphTempOutdoorImageButton"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperature" />
+                    app:layout_constraintBottom_toBottomOf="@+id/temperatureImageView"
+                    app:layout_constraintEnd_toStartOf="@+id/graphTemperatureImageButton"
+                    app:layout_constraintTop_toTopOf="@+id/temperatureImageView" />
 
             <ImageButton
-                    android:id="@+id/graphTempOutdoorImageButton"
+                    android:id="@+id/graphTemperatureImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:src="@drawable/ic_bar_chart"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperature"
+                    app:layout_constraintBottom_toBottomOf="@+id/temperatureImageView"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperature" />
+                    app:layout_constraintTop_toTopOf="@+id/temperatureImageView" />
 
             <View
                     android:id="@+id/divider1"
@@ -100,49 +87,49 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageViewTemperature" />
+                    app:layout_constraintTop_toBottomOf="@+id/temperatureImageView" />
+
 
             <ImageView
-                    android:id="@+id/imageViewPressure"
+                    android:id="@+id/voltageImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
-                    app:layout_constraintBottom_toTopOf="@+id/divider2"
+                    android:tint="@android:color/holo_blue_dark"
                     app:layout_constraintStart_toStartOf="parent"
-
                     app:layout_constraintTop_toBottomOf="@+id/divider1"
-                    app:srcCompat="@drawable/ic_pressure" />
+                    app:srcCompat="@drawable/ic_volt_amper" />
 
             <TextView
-                    android:id="@+id/pressureTextView"
+                    android:id="@+id/voltageTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPressure"
-                    app:layout_constraintEnd_toStartOf="@+id/listPressureImageButton"
-                    app:layout_constraintStart_toEndOf="@+id/imageViewPressure"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewPressure" />
+                    app:layout_constraintBottom_toBottomOf="@+id/voltageImageView"
+                    app:layout_constraintEnd_toStartOf="@+id/listVoltageImageButton"
+                    app:layout_constraintStart_toEndOf="@+id/voltageImageView"
+                    app:layout_constraintTop_toTopOf="@+id/voltageImageView" />
 
             <ImageButton
-                    android:id="@+id/listPressureImageButton"
+                    android:id="@+id/listVoltageImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPressure"
-                    app:layout_constraintEnd_toStartOf="@+id/graphPressureImageButton"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewPressure" />
+                    app:layout_constraintBottom_toBottomOf="@+id/voltageImageView"
+                    app:layout_constraintEnd_toStartOf="@+id/graphVoltageImageButton"
+                    app:layout_constraintTop_toTopOf="@+id/voltageImageView" />
 
             <ImageButton
-                    android:id="@+id/graphPressureImageButton"
+                    android:id="@+id/graphVoltageImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:src="@drawable/ic_bar_chart"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPressure"
+                    app:layout_constraintBottom_toBottomOf="@+id/voltageImageView"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewPressure" />
+                    app:layout_constraintTop_toTopOf="@+id/voltageImageView" />
 
             <View
                     android:id="@+id/divider2"
@@ -155,47 +142,48 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageViewPressure" />
+                    app:layout_constraintTop_toBottomOf="@+id/voltageImageView" />
 
             <ImageView
-                    android:id="@+id/imageViewHumidity"
+                    android:id="@+id/amperageImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
+                    android:tint="@android:color/holo_red_light"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider2"
-                    app:srcCompat="@drawable/ic_humidity" />
+                    app:srcCompat="@drawable/ic_volt_amper" />
 
             <TextView
-                    android:id="@+id/humidityTextView"
+                    android:id="@+id/amperageTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewHumidity"
-                    app:layout_constraintEnd_toStartOf="@+id/listHumidityImageButton"
-                    app:layout_constraintStart_toEndOf="@+id/imageViewHumidity"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewHumidity" />
+                    app:layout_constraintBottom_toBottomOf="@+id/amperageImageView"
+                    app:layout_constraintEnd_toStartOf="@+id/listAmperageImageButton"
+                    app:layout_constraintStart_toEndOf="@+id/amperageImageView"
+                    app:layout_constraintTop_toTopOf="@+id/amperageImageView" />
 
             <ImageButton
-                    android:id="@+id/listHumidityImageButton"
+                    android:id="@+id/listAmperageImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewHumidity"
-                    app:layout_constraintEnd_toStartOf="@+id/graphHumidityImageButton"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewHumidity" />
+                    app:layout_constraintBottom_toBottomOf="@+id/amperageImageView"
+                    app:layout_constraintEnd_toStartOf="@+id/graphAmperageImageButton"
+                    app:layout_constraintTop_toTopOf="@+id/amperageImageView" />
 
             <ImageButton
-                    android:id="@+id/graphHumidityImageButton"
+                    android:id="@+id/graphAmperageImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:src="@drawable/ic_bar_chart"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewHumidity"
+                    app:layout_constraintBottom_toBottomOf="@+id/amperageImageView"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewHumidity" />
+                    app:layout_constraintTop_toTopOf="@+id/amperageImageView" />
 
             <View
                     android:id="@+id/divider3"
@@ -208,48 +196,12 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageViewHumidity" />
+                    app:layout_constraintTop_toBottomOf="@+id/amperageImageView" />
 
-            <ImageView
-                    android:id="@+id/imageViewTemperatureIndoor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/divider3"
-                    app:srcCompat="@drawable/ic_temperature" />
 
-            <TextView
-                    android:id="@+id/temperatureIndoorTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperatureIndoor"
-                    app:layout_constraintEnd_toStartOf="@+id/listTemperatureIndoorImageButton"
-                    app:layout_constraintStart_toEndOf="@+id/imageViewTemperatureIndoor"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperatureIndoor" />
-
-            <ImageButton
-                    android:id="@+id/listTemperatureIndoorImageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_list"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperatureIndoor"
-                    app:layout_constraintEnd_toStartOf="@+id/graphTemperatureIndoorImageButton"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperatureIndoor" />
-
-            <ImageButton
-                    android:id="@+id/graphTemperatureIndoorImageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:src="@drawable/ic_bar_chart"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewTemperatureIndoor"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewTemperatureIndoor" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -262,8 +214,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_lamp_on"
-            app:tint = "@android:color/holo_red_light"
-            />
+            app:tint="@android:color/holo_red_light" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/is_switch_of_bulb_off"
@@ -275,4 +226,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_lamp_off" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package m.kampukter.homeweatherstation.repository
+package m.kampukter.homeweatherstation.data.repository
 
 import m.kampukter.homeweatherstation.data.InfoSensor
 import retrofit2.Call

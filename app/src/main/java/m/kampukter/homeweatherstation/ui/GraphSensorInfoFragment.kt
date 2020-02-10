@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.RequestPeriod
-import m.kampukter.homeweatherstation.data.Sensor
+import m.kampukter.homeweatherstation.data.SensorInf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.lifecycle.Observer
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -29,7 +29,7 @@ class GraphSensorInfoFragment : Fragment() {
 
     private val viewModel by viewModel<MyViewModel>()
     private var searchSensor: String? = null
-    private var sensorInformation: Sensor? = null
+    private var sensorInformation: SensorInf? = null
 
     private var strDateBegin: String =
         DateFormat.format("yyyy-MM-dd", Date(Date().time - (1000 * 60 * 60 * 24))).toString()

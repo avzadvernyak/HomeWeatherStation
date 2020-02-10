@@ -1,11 +1,11 @@
-package m.kampukter.homeweatherstation.repository
+package m.kampukter.homeweatherstation.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import m.kampukter.homeweatherstation.data.InfoSensor
 import m.kampukter.homeweatherstation.data.RequestPeriod
 import m.kampukter.homeweatherstation.data.ResultInfoSensor
-import m.kampukter.homeweatherstation.data.Sensor
+import m.kampukter.homeweatherstation.data.SensorInf
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -35,13 +35,16 @@ class InfoSensorRepository {
         return result
     }
 
-    fun getInfoBySensor(sensorId: String): Sensor? {
-        var retValue: Sensor? = null
-        val sensors: List<Sensor> = listOf(
-            Sensor("TempOutdoor", "°C", "ESP8266-10", 50.0, -35.0),
-            Sensor("TempIndoor", "°C", "ESP8266-11",50.0,-5.0),
-            Sensor("Pressure", "mm Hg", "ESP8266-12",770.0,720.0),
-            Sensor("Humidity", "%", "ESP8266-13",100.0,0.0)
+    fun getInfoBySensor(sensorId: String): SensorInf? {
+        var retValue: SensorInf? = null
+        val sensors: List<SensorInf> = listOf(
+            SensorInf("TempOutdoor", "°C", "ESP8266-10", 50.0, -35.0),
+            SensorInf("TempIndoor", "°C", "ESP8266-11",50.0,-5.0),
+            SensorInf("TempGuestRoom", "°C", "ESP8266-21",50.0,5.0),
+            SensorInf("Voltage", "°mV", "ESP8266-22",30000.0,0.0),
+            SensorInf("Amperage", "°mA", "ESP8266-23",4000.0,0.0),
+            SensorInf("Pressure", "mm Hg", "ESP8266-12",770.0,720.0),
+            SensorInf("Humidity", "%", "ESP8266-13",100.0,0.0)
         )
 
         sensors.find { it.id == sensorId }?.let {

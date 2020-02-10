@@ -1,25 +1,31 @@
 package m.kampukter.homeweatherstation
 
+import android.util.Log
 import androidx.lifecycle.*
 import m.kampukter.homeweatherstation.data.RequestPeriod
 import m.kampukter.homeweatherstation.data.ResultInfoSensor
-import m.kampukter.homeweatherstation.data.Sensor
-import m.kampukter.homeweatherstation.repository.InfoSensorRepository
-import m.kampukter.homeweatherstation.repository.WebSocketRepository
+import m.kampukter.homeweatherstation.data.SensorInf
+import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
+import m.kampukter.homeweatherstation.data.repository.InfoSensorRepository
+import m.kampukter.homeweatherstation.data.repository.WebSocketRepository
+import java.net.URL
 
 class MyViewModel(
     private val webSocketRepository: WebSocketRepository,
     private val infoSensorRepository: InfoSensorRepository
 ) : ViewModel() {
-    // Это все что касается WS
-    fun startWS(idSite: Int) = webSocketRepository.startWebsocked(idSite)
+    // New все что касается WS
+    fun connectWS(url: URL) = webSocketRepository.webSocketConnect(url)
+    fun disconnectWS(url: URL) = webSocketRepository.webSocketDisconnect(url)
+    fun commandSend(url: URL, command: String) = webSocketRepository.commandSend(url, command)
 
-    fun stopWS() = webSocketRepository.stopWebsocked()
-    fun setCurrentSite(idSite: Int?) = webSocketRepository.setCurrentSite(idSite)
-    fun sendCommandToWs(command: String) = webSocketRepository.sendCommandToWS(command)
-    val sensorInfo = webSocketRepository.sensorInfo
-    val isStatusWS = webSocketRepository.isConnectToWS
-    val currentSiteInfo = webSocketRepository.currentSiteInfo
+    private val urlWS = MutableLiveData<URL>()
+    val connectStatusWS: LiveData<DeviceInteractionApi.ConnectionStatus> =
+        Transformations.switchMap(urlWS) { url -> webSocketRepository.webSocketStatus(url) }
+    val messageWS: LiveData<DeviceInteractionApi.Message> =
+        Transformations.switchMap(urlWS) { url ->
+            webSocketRepository.getMessage(url)}
+    fun urlSet(url: URL) { urlWS.postValue(url) }
 
     // Это все что касается сохраненных на сайте данных
     private val searchData = MutableLiveData<RequestPeriod>()
@@ -29,6 +35,7 @@ class MyViewModel(
 
     fun getQuestionInfoSensor(setPeriod: RequestPeriod) = searchData.postValue(setPeriod)
 
-    fun getInfoBySensor(sensorId: String): Sensor? = infoSensorRepository.getInfoBySensor(sensorId)
+    fun getInfoBySensor(sensorId: String): SensorInf? =
+        infoSensorRepository.getInfoBySensor(sensorId)
 
 }
