@@ -5,36 +5,15 @@
         android:id="@+id/first_device_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <include layout="@layout/status_info_bar"
-            android:id="@+id/statusFirst"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/weather_info"
-            />
-<!--
-    <TextView
-            android:id="@+id/statusTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/weather_info"
-            />
-            -->
-    <ScrollView
 
+    <ScrollView
             android:id="@+id/weather_info"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/statusFirst">
-
+            app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -47,6 +26,7 @@
 
             <ImageView
                     android:id="@+id/imageViewTemperature"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -69,6 +49,7 @@
 
             <ImageButton
                     android:id="@+id/listTempOutdoorImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
@@ -78,6 +59,7 @@
 
             <ImageButton
                     android:id="@+id/graphTempOutdoorImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -101,6 +83,7 @@
 
             <ImageView
                     android:id="@+id/imageViewPressure"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -124,6 +107,7 @@
 
             <ImageButton
                     android:id="@+id/listPressureImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
@@ -133,6 +117,7 @@
 
             <ImageButton
                     android:id="@+id/graphPressureImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -156,6 +141,7 @@
 
             <ImageView
                     android:id="@+id/imageViewHumidity"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -177,6 +163,7 @@
 
             <ImageButton
                     android:id="@+id/listHumidityImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
@@ -186,6 +173,7 @@
 
             <ImageButton
                     android:id="@+id/graphHumidityImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -209,6 +197,7 @@
 
             <ImageView
                     android:id="@+id/imageViewTemperatureIndoor"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -230,6 +219,7 @@
 
             <ImageButton
                     android:id="@+id/listTemperatureIndoorImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
@@ -239,6 +229,7 @@
 
             <ImageButton
                     android:id="@+id/graphTemperatureIndoorImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -259,7 +250,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_lamp_on"
-            app:tint = "@android:color/holo_red_light"
+            app:tint = "@color/colorBulbOn"
             />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

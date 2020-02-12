@@ -1,11 +1,13 @@
 package m.kampukter.homeweatherstation.data.dto
 
 import android.os.Build
-import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.GsonBuilder
-import m.kampukter.homeweatherstation.data.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import m.kampukter.homeweatherstation.data.Device
 import okhttp3.*
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -33,7 +35,7 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
             isDisconnect[webSocket.getUrl()]?.let {
-                if ( !it )disconnect(webSocket.getUrl())
+                if (!it) disconnect(webSocket.getUrl())
             }
         }
 
@@ -47,6 +49,9 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
                     t.message
                 )
             )
+            webSockets = webSockets.filter { _webSocket ->
+                _webSocket.request().url().url() != webSocket.getUrl()
+            }.toMutableList()
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
@@ -105,7 +110,8 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
 
     override fun disconnect(url: URL) {
         isDisconnect[url] = true
-        Handler().postDelayed({
+        GlobalScope.launch {
+            delay(5000)
             isDisconnect[url]?.let {
                 if (it) {
                     webSockets = webSockets.filter { webSocket ->
@@ -119,8 +125,9 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
                     }.toMutableList()
                 }
             }
-        }, 3000)
+        }
     }
+
 
     override fun commandSend(url: URL, command: String) {
         webSockets.find { it.getUrl() == url }?.send(command)

@@ -19,13 +19,14 @@ class MyViewModel(
     fun disconnectWS(url: URL) = webSocketRepository.webSocketDisconnect(url)
     fun commandSend(url: URL, command: String) = webSocketRepository.commandSend(url, command)
 
-    private val urlWS = MutableLiveData<URL>()
+    private val _urlWS = MutableLiveData<URL>()
+    public val urlWS: LiveData<URL> get() = _urlWS
     val connectStatusWS: LiveData<DeviceInteractionApi.ConnectionStatus> =
-        Transformations.switchMap(urlWS) { url -> webSocketRepository.webSocketStatus(url) }
+        Transformations.switchMap(_urlWS) { url -> webSocketRepository.webSocketStatus(url) }
     val messageWS: LiveData<DeviceInteractionApi.Message> =
-        Transformations.switchMap(urlWS) { url ->
+        Transformations.switchMap(_urlWS) { url ->
             webSocketRepository.getMessage(url)}
-    fun urlSet(url: URL) { urlWS.postValue(url) }
+    fun urlSet(url: URL) { _urlWS.postValue(url) }
 
     // Это все что касается сохраненных на сайте данных
     private val searchData = MutableLiveData<RequestPeriod>()

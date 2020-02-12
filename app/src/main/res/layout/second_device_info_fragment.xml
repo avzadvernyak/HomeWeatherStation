@@ -5,17 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-    <include
-            android:id="@+id/statusSecond"
-            layout="@layout/status_info_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/device_info"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
     <ScrollView
 
             android:id="@+id/device_info"
@@ -24,7 +13,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/statusSecond">
+            app:layout_constraintTop_toTopOf="parent">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,6 +26,7 @@
 
             <ImageView
                     android:id="@+id/temperatureImageView"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -59,6 +49,7 @@
 
             <ImageButton
                     android:id="@+id/listTemperatureImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
@@ -68,6 +59,7 @@
 
             <ImageButton
                     android:id="@+id/graphTemperatureImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -92,6 +84,7 @@
 
             <ImageView
                     android:id="@+id/voltageImageView"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -114,6 +107,7 @@
 
             <ImageButton
                     android:id="@+id/listVoltageImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
@@ -123,6 +117,7 @@
 
             <ImageButton
                     android:id="@+id/graphVoltageImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -146,6 +141,7 @@
 
             <ImageView
                     android:id="@+id/amperageImageView"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -168,6 +164,7 @@
 
             <ImageButton
                     android:id="@+id/listAmperageImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_list"
@@ -177,6 +174,7 @@
 
             <ImageButton
                     android:id="@+id/graphAmperageImageButton"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -214,7 +212,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_lamp_on"
-            app:tint="@android:color/holo_red_light" />
+            app:tint="@color/colorBulbOn" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/is_switch_of_bulb_off"

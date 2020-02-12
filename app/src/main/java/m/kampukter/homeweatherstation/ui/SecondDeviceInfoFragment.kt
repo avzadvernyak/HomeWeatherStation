@@ -2,7 +2,6 @@ package m.kampukter.homeweatherstation.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.second_device_info_fragment.*
-import kotlinx.android.synthetic.main.status_info_bar.view.*
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.Sensor
@@ -48,56 +46,9 @@ class SecondDeviceInfoFragment : Fragment() {
         voltageTextView.text = getString(R.string.no_connect_value)
         amperageTextView.text = getString(R.string.no_connect_value)
 
-        viewModel.connectStatusWS.observe(this, Observer { status ->
-
+        viewModel.connectStatusWS.observe(this, Observer {
             is_switch_of_bulb_on.hide()
             is_switch_of_bulb_off.hide()
-
-            with(statusSecond) {
-                statusTextView.visibility = View.INVISIBLE
-                failedTextView.visibility = View.INVISIBLE
-                failedMsgTextView.visibility = View.INVISIBLE
-                materialIconButton.visibility = View.INVISIBLE
-                when (status) {
-                    is DeviceInteractionApi.ConnectionStatus.Connected -> {
-                        statusTextView.visibility = View.VISIBLE
-                        statusTextView.text =
-                            getString(R.string.connection_changed_message, "Connected")
-                    }
-                    is DeviceInteractionApi.ConnectionStatus.Disconnected -> {
-                        statusTextView.visibility = View.VISIBLE
-                        statusTextView.text =
-                            getString(R.string.connection_changed_message, "Disconnected")
-                    }
-                    is DeviceInteractionApi.ConnectionStatus.Connecting -> {
-                        statusTextView.visibility = View.VISIBLE
-                        statusTextView.text = "Connecting..."
-                    }
-                    is DeviceInteractionApi.ConnectionStatus.Closing -> {
-                        statusTextView.visibility = View.VISIBLE
-                        statusTextView.text = "Closing..."
-                    }
-                    is DeviceInteractionApi.ConnectionStatus.Failed -> {
-                        failedTextView.visibility = View.VISIBLE
-                        failedMsgTextView.visibility = View.VISIBLE
-                        materialIconButton.visibility = View.VISIBLE
-                        failedTextView.text = "Failed"
-                        failedMsgTextView.text = status.reason
-                        materialIconButton.setOnClickListener {
-                            materialIconButton.visibility = View.INVISIBLE
-                            viewModel.disconnectWS(
-                                siteURL
-                            )
-                            Handler().postDelayed({
-                                viewModel.connectWS(
-                                    siteURL
-                                )
-                            }, 3000)
-                        }
-                    }
-
-                }
-            }
         })
         viewModel.messageWS.observe(this, androidx.lifecycle.Observer {
             when (it) {
