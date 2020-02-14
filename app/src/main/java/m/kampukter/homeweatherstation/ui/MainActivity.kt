@@ -1,13 +1,19 @@
 package m.kampukter.homeweatherstation.ui
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.main_activity.*
+import m.kampukter.homeweatherstation.Constants.FIRST_LOCAL_URL
+import m.kampukter.homeweatherstation.Constants.FIRST_URL
+import m.kampukter.homeweatherstation.Constants.LOCAL_SSID
+import m.kampukter.homeweatherstation.Constants.SECOND_LOCAL_URL
+import m.kampukter.homeweatherstation.Constants.SECOND_URL
 import m.kampukter.homeweatherstation.MyViewModel
+import m.kampukter.homeweatherstation.NetworkLiveData
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<MyViewModel>()
 
-    private lateinit var siteFirstURL: URL
+    lateinit var siteFirstURL: URL
     private lateinit var siteSecondURL: URL
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,11 +34,40 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             title = "Smart House"
-            //setDisplayHomeAsUpEnabled(true)
-            //setDisplayShowHomeEnabled(true)
         }
-        siteFirstURL = URL(getString(R.string.firstServerUrl))
-        siteSecondURL = URL(getString(R.string.secondServerUrl))
+
+        NetworkLiveData.init(application)
+        if (NetworkLiveData.getSSID() == LOCAL_SSID) {
+            siteFirstURL = URL(FIRST_LOCAL_URL)
+            siteSecondURL = URL(SECOND_LOCAL_URL)
+        } else {
+            siteFirstURL = URL(FIRST_URL)
+            siteSecondURL = URL(SECOND_URL)
+        }
+        viewModel.setFirstURL(siteFirstURL)
+        viewModel.setSecondURL(siteSecondURL)
+        /*NetworkLiveData.observe(this, Observer {
+            Log.d("blablabla", "NetworkLiveData.observe $it")
+            if (it == LOCAL_SSID) {
+                siteFirstURL = URL(FIRST_LOCAL_URL)
+                siteSecondURL = URL(SECOND_LOCAL_URL)
+                Log.d("blablabla", "LAN")
+            } else {
+                Log.d("blablabla", "WAN")
+                siteFirstURL = URL(FIRST_URL)
+                siteSecondURL = URL(SECOND_URL)
+            }
+            viewModel.urlSet(siteFirstURL)
+            viewModel.urlSet(siteSecondURL)
+
+            viewModel.connectWS(siteFirstURL)
+            viewModel.connectWS(siteSecondURL)
+
+            viewModel.setFirstURL(siteFirstURL)
+             viewModel.setSecondURL(siteSecondURL)
+
+        })*/
+
 
         viewPager.adapter = DeviceWSPagerAdapter(supportFragmentManager)
 
@@ -42,24 +77,16 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.connectStatusWS.observe(this, Observer { status ->
-            //Log.d("blablabla", "Observer $currentURL")
-
-            //statusConstraint.visibility = View.VISIBLE
             statusTextView.visibility = View.INVISIBLE
             failedTextView.visibility = View.INVISIBLE
             failedMsgTextView.visibility = View.INVISIBLE
             materialIconButton.visibility = View.INVISIBLE
+            BottomSheetBehavior.from(statusConstraint).state = BottomSheetBehavior.STATE_COLLAPSED
             when (status) {
                 is DeviceInteractionApi.ConnectionStatus.Connected -> {
                     statusTextView.visibility = View.VISIBLE
                     statusTextView.text =
                         getString(R.string.connection_changed_message, "Connected")
-                    /*
-                    Handler().postDelayed({
-                        statusConstraint.visibility = View.GONE
-                    }, 3000)
-
-                     */
                 }
                 is DeviceInteractionApi.ConnectionStatus.Disconnected -> {
                     statusTextView.visibility = View.VISIBLE
@@ -100,7 +127,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        //Log.d("blablabla", "TestActivity->onPause")
         viewModel.disconnectWS(siteFirstURL)
         viewModel.disconnectWS(siteSecondURL)
     }

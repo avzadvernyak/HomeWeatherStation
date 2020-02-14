@@ -15,13 +15,16 @@ import m.kampukter.homeweatherstation.data.Sensor
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
 import java.net.URL
 import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
+import m.kampukter.homeweatherstation.Constants.SECOND_LOCAL_URL
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SecondDeviceInfoFragment : Fragment() {
 
     private lateinit var siteURL: URL
 
-    private val viewModel by sharedViewModel<MyViewModel>()
+    private val sharedViewModel by sharedViewModel<MyViewModel>()
+    private val fragmentViewModel by viewModel<MyViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,23 +37,30 @@ class SecondDeviceInfoFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.urlSet(siteURL)
+        sharedViewModel.urlSet(siteURL)
+        //Log.d("blablabla", "Set in Res $siteURL")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        siteURL = URL(getString(R.string.secondServerUrl))
+        siteURL = URL(SECOND_LOCAL_URL)
+        sharedViewModel.secondURL.observe(this, Observer {
+            siteURL = it
+            fragmentViewModel.urlSet(siteURL)
+//            Log.d("blablabla", "Set in Obs $siteURL")
+        })
+
 
         temperatureTextView.text = getString(R.string.no_connect_value)
         voltageTextView.text = getString(R.string.no_connect_value)
         amperageTextView.text = getString(R.string.no_connect_value)
 
-        viewModel.connectStatusWS.observe(this, Observer {
+        fragmentViewModel.connectStatusWS.observe(this, Observer {
             is_switch_of_bulb_on.hide()
             is_switch_of_bulb_off.hide()
         })
-        viewModel.messageWS.observe(this, androidx.lifecycle.Observer {
+        fragmentViewModel.messageWS.observe(this, androidx.lifecycle.Observer {
             when (it) {
                 is DeviceInteractionApi.Message.DeviceInfo -> {
                     with(it.content) {
@@ -101,11 +111,11 @@ class SecondDeviceInfoFragment : Fragment() {
         })
         is_switch_of_bulb_off.setOnClickListener {
             is_switch_of_bulb_off.hide()
-            viewModel.commandSend(siteURL, "Relay1On")
+            fragmentViewModel.commandSend(siteURL, "Relay1On")
         }
         is_switch_of_bulb_on.setOnClickListener {
             is_switch_of_bulb_on.hide()
-            viewModel.commandSend(siteURL, "Relay1Off")
+            fragmentViewModel.commandSend(siteURL, "Relay1Off")
         }
         graphTemperatureImageButton.setOnClickListener {
             (context as AppCompatActivity).startActivity(

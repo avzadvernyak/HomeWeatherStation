@@ -12,16 +12,19 @@ import kotlinx.android.synthetic.main.first_device_info_fragment.*
 import kotlinx.android.synthetic.main.first_device_info_fragment.is_switch_of_bulb_off
 import kotlinx.android.synthetic.main.first_device_info_fragment.is_switch_of_bulb_on
 import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
+import m.kampukter.homeweatherstation.Constants.FIRST_LOCAL_URL
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.Sensor
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.net.URL
 
 class FirstDeviceInfoFragment : Fragment() {
     private lateinit var siteURL: URL
-    private val viewModel by sharedViewModel<MyViewModel>()
+    private val sharedViewModel by sharedViewModel<MyViewModel>()
+    private val fragmentViewModel by viewModel<MyViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,25 +37,31 @@ class FirstDeviceInfoFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.urlSet(siteURL)
+            //Log.d("blablabla", "Set in Res $siteURL")
+            sharedViewModel.urlSet(siteURL)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        siteURL = URL(getString(R.string.firstServerUrl))
+        siteURL = URL(FIRST_LOCAL_URL)
+        sharedViewModel.firstURL.observe(this, Observer {
+            siteURL = it
+//            Log.d("blablabla", "Set in Obs $siteURL")
+            fragmentViewModel.urlSet(siteURL)
+        })
 
         temperatureOutdoorTextView.text = getString(R.string.no_connect_value)
         temperatureIndoorTextView.text = getString(R.string.no_connect_value)
         pressureTextView.text = getString(R.string.no_connect_value)
         humidityTextView.text = getString(R.string.no_connect_value)
 
-        viewModel.connectStatusWS.observe(this, Observer {
+        fragmentViewModel.connectStatusWS.observe(this, Observer {
             is_switch_of_bulb_on.hide()
             is_switch_of_bulb_off.hide()
         })
 
-        viewModel.messageWS.observe(this, androidx.lifecycle.Observer {
+        fragmentViewModel.messageWS.observe(this, androidx.lifecycle.Observer {
             when (it) {
                 is DeviceInteractionApi.Message.DeviceInfo -> {
                     with(it.content) {
@@ -110,11 +119,11 @@ class FirstDeviceInfoFragment : Fragment() {
         })
         is_switch_of_bulb_off.setOnClickListener {
             is_switch_of_bulb_off.hide()
-            viewModel.commandSend(siteURL, "Relay1On")
+            fragmentViewModel.commandSend(siteURL, "Relay1On")
         }
         is_switch_of_bulb_on.setOnClickListener {
             is_switch_of_bulb_on.hide()
-            viewModel.commandSend(siteURL, "Relay1Off")
+            fragmentViewModel.commandSend(siteURL, "Relay1Off")
         }
         graphHumidityImageButton.setOnClickListener {
             (context as AppCompatActivity).startActivity(
