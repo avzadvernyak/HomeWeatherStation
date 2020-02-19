@@ -45,9 +45,17 @@ class SecondDeviceInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         siteURL = URL(SECOND_LOCAL_URL)
-        sharedViewModel.secondURL.observe(this, Observer {
-            siteURL = it
-            fragmentViewModel.urlSet(siteURL)
+        sharedViewModel.secondURL.observe(this, Observer {_siteURL ->
+            siteURL = _siteURL
+            fragmentViewModel.urlSet(_siteURL)
+            is_switch_of_bulb_off.setOnClickListener {
+                is_switch_of_bulb_off.hide()
+                fragmentViewModel.commandSend(_siteURL, "Relay1On")
+            }
+            is_switch_of_bulb_on.setOnClickListener {
+                is_switch_of_bulb_on.hide()
+                fragmentViewModel.commandSend(_siteURL, "Relay1Off")
+            }
 //            Log.d("blablabla", "Set in Obs $siteURL")
         })
 
@@ -109,14 +117,7 @@ class SecondDeviceInfoFragment : Fragment() {
                 }
             }
         })
-        is_switch_of_bulb_off.setOnClickListener {
-            is_switch_of_bulb_off.hide()
-            fragmentViewModel.commandSend(siteURL, "Relay1On")
-        }
-        is_switch_of_bulb_on.setOnClickListener {
-            is_switch_of_bulb_on.hide()
-            fragmentViewModel.commandSend(siteURL, "Relay1Off")
-        }
+
         graphTemperatureImageButton.setOnClickListener {
             (context as AppCompatActivity).startActivity(
                 Intent(

@@ -1,11 +1,10 @@
 package m.kampukter.homeweatherstation.ui
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import m.kampukter.homeweatherstation.data.InfoSensor
 import m.kampukter.homeweatherstation.R
+import m.kampukter.homeweatherstation.data.InfoSensor
 
 
 class ListSensorInfoAdapter: RecyclerView.Adapter<ListSensorInfoViewHolder>() {
@@ -32,7 +31,6 @@ class ListSensorInfoAdapter: RecyclerView.Adapter<ListSensorInfoViewHolder>() {
 
         fun setList(list: List<InfoSensor>) {
             this.infoSensor = list
-            Log.d("blablabla", "Size" + infoSensor!!.size.toString())
             notifyDataSetChanged()
         }
 }

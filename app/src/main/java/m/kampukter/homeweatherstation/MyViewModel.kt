@@ -1,6 +1,5 @@
 package m.kampukter.homeweatherstation
 
-import android.util.Log
 import androidx.lifecycle.*
 import m.kampukter.homeweatherstation.data.RequestPeriod
 import m.kampukter.homeweatherstation.data.ResultInfoSensor

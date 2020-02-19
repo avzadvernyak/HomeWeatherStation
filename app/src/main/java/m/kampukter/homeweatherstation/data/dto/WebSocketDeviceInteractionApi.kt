@@ -23,7 +23,6 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
         .connectTimeout(10, TimeUnit.SECONDS)
         .build()
 
-    //private var webSockets = mutableListOf<WebSocket>()
     private var webSockets = mutableMapOf<URL, WebSocket>()
     private val connectionStatusLiveDatas =
         mutableMapOf<URL, MutableLiveData<DeviceInteractionApi.ConnectionStatus>>()
@@ -51,14 +50,6 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
                 )
             )
             webSockets.remove(webSocket.getUrl())
-            //Log.d("blablabla", "2Failure Count ${webSockets.size} ${webSocket.getUrl()}")
-            /*Log.d("blablabla", "1Failure Count ${webSockets.size} ${webSocket.getUrl()}")
-            webSockets = webSockets.filter { _webSocket ->
-                Log.d("blablabla", "${_webSocket.request().url().url()} vs ${webSocket.getUrl()}")
-                _webSocket.request().url().url() != webSocket.getUrl()
-            }.toMutableList()
-            Log.d("blablabla", "2Failure Count ${webSockets.size} ${webSocket.getUrl()}")*/
-
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
@@ -110,21 +101,14 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
         }
         isDisconnect[url] = false
         if (!webSockets.containsKey(url)) {
+            connectionStatusLiveDatas[url]?.postValue(
+                DeviceInteractionApi.ConnectionStatus.Connecting
+            )
             webSockets[url] = okHttpClient.newWebSocket(
                 Request.Builder().url(url).build(),
                 webSocketListener
             )
         }
-        /*if (webSockets.find { it.request().url().url() == url } == null) {
-            Log.d("blablabla", "webSockets.add $url")
-            webSockets.add(
-                okHttpClient.newWebSocket(
-                    Request.Builder().url(url).build(),
-                    webSocketListener
-                )
-            )
-        }*/
-        //Log.d("blablabla", "Count ${webSockets.size}")
     }
 
     override fun disconnect(url: URL) {
@@ -136,19 +120,6 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
                     webSockets[url]?.close(1000, null)
                     webSockets.remove(url)
                     connectionStatusLiveDatas[url]?.postValue(DeviceInteractionApi.ConnectionStatus.Closing)
-
-                    /*
-                    webSockets = webSockets.filter { webSocket ->
-                        if (webSocket.request().url().url() == url) {
-                            connectionStatusLiveDatas[url]?.postValue(DeviceInteractionApi.ConnectionStatus.Closing)
-                            webSocket.close(1000, null)
-                            false
-                        } else {
-                            true
-                        }
-                    }.toMutableList()
-
-                     */
                 }
             }
         }
@@ -157,14 +128,6 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
 
     override fun commandSend(url: URL, command: String) {
         webSockets[url]?.send(command)
-        //webSockets.find { it.getUrl() == url }?.send(command)
-        /*
-        when (message) {
-            is DeviceInteractionApi.Message.Text -> {
-                webSockets.find { it.getUrl() == url }?.send(message.content)
-            }
-        }
-         */
     }
 
     override fun getConnectStatusLiveData(url: URL): LiveData<DeviceInteractionApi.ConnectionStatus>? =

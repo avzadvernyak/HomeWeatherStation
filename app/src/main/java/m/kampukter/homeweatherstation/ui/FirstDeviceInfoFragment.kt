@@ -2,6 +2,7 @@ package m.kampukter.homeweatherstation.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,10 +46,17 @@ class FirstDeviceInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         siteURL = URL(FIRST_LOCAL_URL)
-        sharedViewModel.firstURL.observe(this, Observer {
-            siteURL = it
-//            Log.d("blablabla", "Set in Obs $siteURL")
-            fragmentViewModel.urlSet(siteURL)
+        sharedViewModel.firstURL.observe(this, Observer {_siteURL ->
+            siteURL = _siteURL
+            fragmentViewModel.urlSet(_siteURL)
+            is_switch_of_bulb_off.setOnClickListener {
+                is_switch_of_bulb_off.hide()
+                fragmentViewModel.commandSend(_siteURL, "Relay1On")
+            }
+            is_switch_of_bulb_on.setOnClickListener {
+                is_switch_of_bulb_on.hide()
+                fragmentViewModel.commandSend(_siteURL, "Relay1Off")
+            }
         })
 
         temperatureOutdoorTextView.text = getString(R.string.no_connect_value)
@@ -117,14 +125,7 @@ class FirstDeviceInfoFragment : Fragment() {
                 }
             }
         })
-        is_switch_of_bulb_off.setOnClickListener {
-            is_switch_of_bulb_off.hide()
-            fragmentViewModel.commandSend(siteURL, "Relay1On")
-        }
-        is_switch_of_bulb_on.setOnClickListener {
-            is_switch_of_bulb_on.hide()
-            fragmentViewModel.commandSend(siteURL, "Relay1Off")
-        }
+
         graphHumidityImageButton.setOnClickListener {
             (context as AppCompatActivity).startActivity(
                 Intent(

@@ -1,7 +1,7 @@
 package m.kampukter.homeweatherstation.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -23,11 +23,13 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<MyViewModel>()
 
-    lateinit var siteFirstURL: URL
+    private lateinit var siteFirstURL: URL
     private lateinit var siteSecondURL: URL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var isHiddenSheet: Boolean
 
         setContentView(R.layout.main_activity)
 
@@ -46,34 +48,12 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.setFirstURL(siteFirstURL)
         viewModel.setSecondURL(siteSecondURL)
-        /*NetworkLiveData.observe(this, Observer {
-            Log.d("blablabla", "NetworkLiveData.observe $it")
-            if (it == LOCAL_SSID) {
-                siteFirstURL = URL(FIRST_LOCAL_URL)
-                siteSecondURL = URL(SECOND_LOCAL_URL)
-                Log.d("blablabla", "LAN")
-            } else {
-                Log.d("blablabla", "WAN")
-                siteFirstURL = URL(FIRST_URL)
-                siteSecondURL = URL(SECOND_URL)
-            }
-            viewModel.urlSet(siteFirstURL)
-            viewModel.urlSet(siteSecondURL)
-
-            viewModel.connectWS(siteFirstURL)
-            viewModel.connectWS(siteSecondURL)
-
-            viewModel.setFirstURL(siteFirstURL)
-             viewModel.setSecondURL(siteSecondURL)
-
-        })*/
-
-
         viewPager.adapter = DeviceWSPagerAdapter(supportFragmentManager)
 
         lateinit var currentURL: URL
         viewModel.urlWS.observe(this, Observer {
             currentURL = it
+            isHiddenSheet = false
         })
 
         viewModel.connectStatusWS.observe(this, Observer { status ->
@@ -81,27 +61,25 @@ class MainActivity : AppCompatActivity() {
             failedTextView.visibility = View.INVISIBLE
             failedMsgTextView.visibility = View.INVISIBLE
             materialIconButton.visibility = View.INVISIBLE
-            BottomSheetBehavior.from(statusConstraint).state = BottomSheetBehavior.STATE_COLLAPSED
+
+
             when (status) {
                 is DeviceInteractionApi.ConnectionStatus.Connected -> {
                     statusTextView.visibility = View.VISIBLE
                     statusTextView.text =
                         getString(R.string.connection_changed_message, "Connected")
-                }
-                is DeviceInteractionApi.ConnectionStatus.Disconnected -> {
-                    statusTextView.visibility = View.VISIBLE
-                    statusTextView.text =
-                        getString(R.string.connection_changed_message, "Disconnected")
-                }
-                is DeviceInteractionApi.ConnectionStatus.Connecting -> {
-                    statusTextView.visibility = View.VISIBLE
-                    statusTextView.text = getString(R.string.connect_msg_connecting)
-                }
-                is DeviceInteractionApi.ConnectionStatus.Closing -> {
-                    statusTextView.visibility = View.VISIBLE
-                    statusTextView.text = getString(R.string.connect_msg_closing)
+                    isHiddenSheet = true
+                    Handler().postDelayed({
+                        if (isHiddenSheet) BottomSheetBehavior.from(statusConstraint).state =
+                            BottomSheetBehavior.STATE_HIDDEN
+                    }, 5000)
+
                 }
                 is DeviceInteractionApi.ConnectionStatus.Failed -> {
+                    isHiddenSheet = false
+                    BottomSheetBehavior.from(statusConstraint).state =
+                        BottomSheetBehavior.STATE_COLLAPSED
+
                     failedTextView.visibility = View.VISIBLE
                     failedMsgTextView.visibility = View.VISIBLE
                     materialIconButton.visibility = View.VISIBLE
@@ -114,9 +92,20 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 }
+                is DeviceInteractionApi.ConnectionStatus.Disconnected -> {
+                    isHiddenSheet =
+                        showStatus(getString(R.string.connection_changed_message, "Disconnected"))
+                }
+                is DeviceInteractionApi.ConnectionStatus.Connecting -> {
+                    isHiddenSheet = showStatus(getString(R.string.connect_msg_connecting))
+                }
+                is DeviceInteractionApi.ConnectionStatus.Closing -> {
+                    isHiddenSheet = showStatus(getString(R.string.connect_msg_closing))
+                }
             }
 
         })
+
     }
 
     override fun onResume() {
@@ -129,5 +118,13 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         viewModel.disconnectWS(siteFirstURL)
         viewModel.disconnectWS(siteSecondURL)
+    }
+
+    private fun showStatus(msg: String): Boolean {
+        statusTextView.visibility = View.VISIBLE
+        statusTextView.text = msg
+        BottomSheetBehavior.from(statusConstraint).state =
+            BottomSheetBehavior.STATE_COLLAPSED
+        return false
     }
 }

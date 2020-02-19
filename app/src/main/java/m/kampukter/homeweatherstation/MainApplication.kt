@@ -10,7 +10,8 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
-class MainApplication : Application() {
+@Suppress("unused")
+class MainApplication: Application() {
     private val module = module {
 
         single<DeviceInteractionApi> { WebSocketDeviceInteractionApi() }

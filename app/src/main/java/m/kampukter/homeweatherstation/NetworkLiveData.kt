@@ -26,7 +26,7 @@ object NetworkLiveData : LiveData<String>() {
             .build()
     }
 
-    fun isNetworkAvaiable(): Boolean {
+    private fun isNetworkAvailable(): Boolean {
         val connectivityManager = application.getSystemService(
             Context.CONNECTIVITY_SERVICE
         ) as ConnectivityManager
@@ -34,14 +34,10 @@ object NetworkLiveData : LiveData<String>() {
         return activeNetwork != null && activeNetwork.isConnected
     }
 
-    fun getSSID(): String? {
+    fun getSSID(): String? = if (isNetworkAvailable()) {
+        (application.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo.ssid
+    } else null
 
-        val connectivityManager =
-            application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return if (isNetworkAvaiable()) {
-            (application.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo.ssid
-        } else null
-    }
 
     private fun getDetails() {
 

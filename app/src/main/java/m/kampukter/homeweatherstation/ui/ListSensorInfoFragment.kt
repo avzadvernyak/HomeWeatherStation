@@ -180,7 +180,7 @@ class ListSensorInfoFragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
 
-                    Log.d("blablabla", "infoSensorList is Empty")
+                    //Log.d("blablabla", "infoSensorList is Empty")
                 }
             }
         })
