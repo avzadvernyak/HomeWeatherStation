@@ -1,8 +1,8 @@
 package m.kampukter.homeweatherstation.data
 
 
-data class RequestPeriod (
-    val unit: String,
+data class SensorRequest (
+    val sensorName: String,
     val dateBegin: String,
     val dateEnd: String
 )

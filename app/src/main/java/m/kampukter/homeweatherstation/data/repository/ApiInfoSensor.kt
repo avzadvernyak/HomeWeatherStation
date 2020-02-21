@@ -1,6 +1,6 @@
 package m.kampukter.homeweatherstation.data.repository
 
-import m.kampukter.homeweatherstation.data.InfoSensor
+import m.kampukter.homeweatherstation.data.SensorValue
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,7 +13,7 @@ interface ApiInfoSensor {
         @Query("sensor") unit: String,
         @Query("period_b") beginDate: String,
         @Query("period_e") endDate: String
-    ): Call<List<InfoSensor>>
+    ): Call<List<SensorValue>>
 
     companion object Factory {
         private const val BASE_URL = "http://orbis.in.ua/api/"

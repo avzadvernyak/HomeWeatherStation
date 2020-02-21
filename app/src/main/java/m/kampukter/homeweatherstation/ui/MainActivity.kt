@@ -7,13 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.main_activity.*
-import m.kampukter.homeweatherstation.Constants.FIRST_LOCAL_URL
-import m.kampukter.homeweatherstation.Constants.FIRST_URL
-import m.kampukter.homeweatherstation.Constants.LOCAL_SSID
-import m.kampukter.homeweatherstation.Constants.SECOND_LOCAL_URL
-import m.kampukter.homeweatherstation.Constants.SECOND_URL
 import m.kampukter.homeweatherstation.MyViewModel
-import m.kampukter.homeweatherstation.NetworkLiveData
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,9 +16,6 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<MyViewModel>()
-
-    private lateinit var siteFirstURL: URL
-    private lateinit var siteSecondURL: URL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,18 +28,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.apply {
             title = "Smart House"
         }
-
-        NetworkLiveData.init(application)
-        if (NetworkLiveData.getSSID() == LOCAL_SSID) {
-            siteFirstURL = URL(FIRST_LOCAL_URL)
-            siteSecondURL = URL(SECOND_LOCAL_URL)
-        } else {
-            siteFirstURL = URL(FIRST_URL)
-            siteSecondURL = URL(SECOND_URL)
-        }
-        viewModel.setFirstURL(siteFirstURL)
-        viewModel.setSecondURL(siteSecondURL)
-        viewPager.adapter = DeviceWSPagerAdapter(supportFragmentManager)
+        val adapter = DeviceWSPagerAdapter(supportFragmentManager)
+        viewPager.adapter = adapter
 
         lateinit var currentURL: URL
         viewModel.urlWS.observe(this, Observer {
@@ -110,14 +91,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.connectWS(siteFirstURL)
-        viewModel.connectWS(siteSecondURL)
+        viewModel.connectToAllDevices()
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.disconnectWS(siteFirstURL)
-        viewModel.disconnectWS(siteSecondURL)
+        viewModel.disconnectToAllDevices()
     }
 
     private fun showStatus(msg: String): Boolean {

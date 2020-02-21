@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import m.kampukter.homeweatherstation.R
-import m.kampukter.homeweatherstation.data.InfoSensor
+import m.kampukter.homeweatherstation.data.SensorValue
 
 
 class ListSensorInfoAdapter: RecyclerView.Adapter<ListSensorInfoViewHolder>() {
 
-        private var infoSensor: List<InfoSensor>? = null
+        private var sensorValue: List<SensorValue>? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListSensorInfoViewHolder {
             return ListSensorInfoViewHolder(
@@ -20,17 +20,17 @@ class ListSensorInfoAdapter: RecyclerView.Adapter<ListSensorInfoViewHolder>() {
         }
 
         override fun getItemCount(): Int {
-            return infoSensor?.size ?: 0
+            return sensorValue?.size ?: 0
         }
 
         override fun onBindViewHolder(holder: ListSensorInfoViewHolder, position: Int) {
-            infoSensor?.get(position)?.let { item ->
+            sensorValue?.get(position)?.let { item ->
                 holder.bind(item)
             }
         }
 
-        fun setList(list: List<InfoSensor>) {
-            this.infoSensor = list
+        fun setList(list: List<SensorValue>) {
+            this.sensorValue = list
             notifyDataSetChanged()
         }
 }

@@ -2,7 +2,6 @@ package m.kampukter.homeweatherstation.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.first_device_info_fragment.*
-import kotlinx.android.synthetic.main.first_device_info_fragment.is_switch_of_bulb_off
-import kotlinx.android.synthetic.main.first_device_info_fragment.is_switch_of_bulb_on
 import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
-import m.kampukter.homeweatherstation.Constants.FIRST_LOCAL_URL
+import m.kampukter.homeweatherstation.Constants.FIRST_URL
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.Sensor
@@ -23,7 +20,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.net.URL
 
 class FirstDeviceInfoFragment : Fragment() {
-    private lateinit var siteURL: URL
+
+    private val siteURL: URL = URL(FIRST_URL)
+
     private val sharedViewModel by sharedViewModel<MyViewModel>()
     private val fragmentViewModel by viewModel<MyViewModel>()
 
@@ -38,32 +37,18 @@ class FirstDeviceInfoFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-            //Log.d("blablabla", "Set in Res $siteURL")
-            sharedViewModel.urlSet(siteURL)
+        sharedViewModel.urlSet(siteURL)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        siteURL = URL(FIRST_LOCAL_URL)
-        sharedViewModel.firstURL.observe(this, Observer {_siteURL ->
-            siteURL = _siteURL
-            fragmentViewModel.urlSet(_siteURL)
-            is_switch_of_bulb_off.setOnClickListener {
-                is_switch_of_bulb_off.hide()
-                fragmentViewModel.commandSend(_siteURL, "Relay1On")
-            }
-            is_switch_of_bulb_on.setOnClickListener {
-                is_switch_of_bulb_on.hide()
-                fragmentViewModel.commandSend(_siteURL, "Relay1Off")
-            }
-        })
 
         temperatureOutdoorTextView.text = getString(R.string.no_connect_value)
         temperatureIndoorTextView.text = getString(R.string.no_connect_value)
         pressureTextView.text = getString(R.string.no_connect_value)
         humidityTextView.text = getString(R.string.no_connect_value)
 
+        fragmentViewModel.urlSet(siteURL)
         fragmentViewModel.connectStatusWS.observe(this, Observer {
             is_switch_of_bulb_on.hide()
             is_switch_of_bulb_off.hide()
@@ -126,13 +111,22 @@ class FirstDeviceInfoFragment : Fragment() {
             }
         })
 
+        is_switch_of_bulb_off.setOnClickListener {
+            is_switch_of_bulb_off.hide()
+            fragmentViewModel.commandSend(siteURL, "Relay1On")
+        }
+        is_switch_of_bulb_on.setOnClickListener {
+            is_switch_of_bulb_on.hide()
+            fragmentViewModel.commandSend(siteURL, "Relay1Off")
+        }
+
         graphHumidityImageButton.setOnClickListener {
             (context as AppCompatActivity).startActivity(
                 Intent(
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "Humidity") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-13") }
             )
         }
         listHumidityImageButton.setOnClickListener {
@@ -141,7 +135,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "Humidity") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-13") }
             )
         }
         graphTempOutdoorImageButton.setOnClickListener {
@@ -150,7 +144,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "TempOutdoor") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-10") }
             )
         }
         listTempOutdoorImageButton.setOnClickListener {
@@ -159,7 +153,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "TempOutdoor") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-10") }
             )
         }
         graphPressureImageButton.setOnClickListener {
@@ -168,7 +162,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "Pressure") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-12") }
             )
         }
         listPressureImageButton.setOnClickListener {
@@ -177,7 +171,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "Pressure") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-12") }
             )
         }
         graphTemperatureIndoorImageButton.setOnClickListener {
@@ -186,7 +180,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "TempIndoor") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-11") }
             )
         }
         listTemperatureIndoorImageButton.setOnClickListener {
@@ -195,12 +189,13 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "TempIndoor") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-11") }
             )
         }
     }
 
     companion object {
+
         fun newInstance(): FirstDeviceInfoFragment {
             return FirstDeviceInfoFragment()
         }

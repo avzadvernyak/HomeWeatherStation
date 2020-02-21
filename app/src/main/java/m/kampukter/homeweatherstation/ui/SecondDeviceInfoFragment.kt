@@ -15,13 +15,13 @@ import m.kampukter.homeweatherstation.data.Sensor
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
 import java.net.URL
 import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
-import m.kampukter.homeweatherstation.Constants.SECOND_LOCAL_URL
+import m.kampukter.homeweatherstation.Constants.SECOND_URL
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SecondDeviceInfoFragment : Fragment() {
 
-    private lateinit var siteURL: URL
+    private val siteURL: URL = URL(SECOND_URL)
 
     private val sharedViewModel by sharedViewModel<MyViewModel>()
     private val fragmentViewModel by viewModel<MyViewModel>()
@@ -38,32 +38,16 @@ class SecondDeviceInfoFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         sharedViewModel.urlSet(siteURL)
-        //Log.d("blablabla", "Set in Res $siteURL")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        siteURL = URL(SECOND_LOCAL_URL)
-        sharedViewModel.secondURL.observe(this, Observer {_siteURL ->
-            siteURL = _siteURL
-            fragmentViewModel.urlSet(_siteURL)
-            is_switch_of_bulb_off.setOnClickListener {
-                is_switch_of_bulb_off.hide()
-                fragmentViewModel.commandSend(_siteURL, "Relay1On")
-            }
-            is_switch_of_bulb_on.setOnClickListener {
-                is_switch_of_bulb_on.hide()
-                fragmentViewModel.commandSend(_siteURL, "Relay1Off")
-            }
-//            Log.d("blablabla", "Set in Obs $siteURL")
-        })
-
-
         temperatureTextView.text = getString(R.string.no_connect_value)
         voltageTextView.text = getString(R.string.no_connect_value)
         amperageTextView.text = getString(R.string.no_connect_value)
 
+        fragmentViewModel.urlSet(siteURL)
         fragmentViewModel.connectStatusWS.observe(this, Observer {
             is_switch_of_bulb_on.hide()
             is_switch_of_bulb_off.hide()
@@ -117,14 +101,21 @@ class SecondDeviceInfoFragment : Fragment() {
                 }
             }
         })
-
+        is_switch_of_bulb_off.setOnClickListener {
+            is_switch_of_bulb_off.hide()
+            fragmentViewModel.commandSend(siteURL, "Relay1On")
+        }
+        is_switch_of_bulb_on.setOnClickListener {
+            is_switch_of_bulb_on.hide()
+            fragmentViewModel.commandSend(siteURL, "Relay1Off")
+        }
         graphTemperatureImageButton.setOnClickListener {
             (context as AppCompatActivity).startActivity(
                 Intent(
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "TempGuestRoom") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-21") }
             )
         }
         listTemperatureImageButton.setOnClickListener {
@@ -133,7 +124,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "TempGuestRoom") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-21") }
             )
         }
         graphVoltageImageButton.setOnClickListener {
@@ -142,7 +133,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "Voltage") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-22") }
             )
         }
         listVoltageImageButton.setOnClickListener {
@@ -151,7 +142,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "Voltage") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-22") }
             )
         }
         graphAmperageImageButton.setOnClickListener {
@@ -160,7 +151,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "Amperage") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-23") }
             )
         }
         listAmperageImageButton.setOnClickListener {
@@ -169,7 +160,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "Amperage") }
+                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-23") }
             )
         }
     }
