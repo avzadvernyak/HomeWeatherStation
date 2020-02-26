@@ -25,7 +25,7 @@ class MainApplication : Application() {
 
         single<DeviceInteractionApi> { WebSocketDeviceInteractionApi() }
 
-        single { WebSocketRepository(get(),get<MyDatabase>().sensorInformationDao()) }
+        single { WebSocketRepository(get()) }
         single { SensorRepository(get<MyDatabase>().sensorInformationDao()) }
         viewModel { MyViewModel(get(), get()) }
         single {

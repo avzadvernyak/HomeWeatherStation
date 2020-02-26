@@ -5,13 +5,17 @@ import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.main_activity.*
+import m.kampukter.homeweatherstation.Constants.LAN
+import m.kampukter.homeweatherstation.Constants.LOCAL_SSID
+import m.kampukter.homeweatherstation.Constants.WAN
 import m.kampukter.homeweatherstation.MyViewModel
+import m.kampukter.homeweatherstation.NetworkLiveData
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,14 +32,35 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.apply {
             title = "Smart House"
         }
-        val adapter = DeviceWSPagerAdapter(supportFragmentManager)
-        viewPager.adapter = adapter
 
-        lateinit var currentURL: URL
-        viewModel.urlWS.observe(this, Observer {
-            currentURL = it
-            isHiddenSheet = false
+        NetworkLiveData.init(application)
+        viewModel.setNetwork(
+            if (NetworkLiveData.getSSID() == LOCAL_SSID) LAN
+            else WAN
+        )
+
+        val adapter = DeviceWSPagerAdapter(supportFragmentManager)
+        viewModel.devices.observe(this, Observer {
+            adapter.setListDevice(it)
+            viewModel.setDevice(adapter.getListDevice(0))
         })
+
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+
+            override fun onPageScrollStateChanged(state: Int) {}
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                viewModel.setDevice(adapter.getListDevice(position))
+            }
+        })
+        viewPager.adapter = adapter
 
         viewModel.connectStatusWS.observe(this, Observer { status ->
             statusTextView.visibility = View.INVISIBLE
@@ -69,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
                     materialIconButton.setOnClickListener {
                         materialIconButton.visibility = View.INVISIBLE
-                        viewModel.connectWS(currentURL)
+                        viewModel.connectToDevices()
                     }
 
                 }
@@ -91,7 +116,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.connectToAllDevices()
+        viewModel.connectToDevices()
     }
 
     override fun onPause() {

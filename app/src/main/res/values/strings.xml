@@ -23,5 +23,6 @@
     <string name="connect_msg_connecting">Connecting…</string>
     <string name="connect_msg_closing">Closing…</string>
     <string name="connect_msg_failed">Failed</string>
+    <string name="lighting">Lighting</string>
 
 </resources>

@@ -9,22 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.second_device_info_fragment.*
+import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.Sensor
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
-import java.net.URL
-import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
-import m.kampukter.homeweatherstation.Constants.SECOND_URL
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SecondDeviceInfoFragment : Fragment() {
 
-    private val siteURL: URL = URL(SECOND_URL)
-
-    private val sharedViewModel by sharedViewModel<MyViewModel>()
     private val fragmentViewModel by viewModel<MyViewModel>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,19 +30,19 @@ class SecondDeviceInfoFragment : Fragment() {
         return inflater.inflate(R.layout.second_device_info_fragment, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
-        sharedViewModel.urlSet(siteURL)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.getString("ARG_DEVICE_NAME")?.let {
+            fragmentViewModel.setDevice(it)
+            fragmentViewModel.command.observe(this, Observer{})
+        }
 
         temperatureTextView.text = getString(R.string.no_connect_value)
         voltageTextView.text = getString(R.string.no_connect_value)
         amperageTextView.text = getString(R.string.no_connect_value)
 
-        fragmentViewModel.urlSet(siteURL)
+
         fragmentViewModel.connectStatusWS.observe(this, Observer {
             is_switch_of_bulb_on.hide()
             is_switch_of_bulb_off.hide()
@@ -60,12 +55,17 @@ class SecondDeviceInfoFragment : Fragment() {
                             when (sensor) {
                                 is Sensor.Relay -> {
                                     if (sensor.id == "3") {
+                                        progressBar.visibility = View.INVISIBLE
+                                        lightingOnImageBottom.visibility = View.INVISIBLE
+                                        lightingOffImageBottom.visibility = View.INVISIBLE
                                         if (sensor.state) {
                                             is_switch_of_bulb_off.hide()
                                             is_switch_of_bulb_on.show()
+                                            lightingOnImageBottom.visibility = View.VISIBLE
                                         } else {
                                             is_switch_of_bulb_off.show()
                                             is_switch_of_bulb_on.hide()
+                                            lightingOffImageBottom.visibility = View.VISIBLE
                                         }
                                     }
                                 }
@@ -103,12 +103,26 @@ class SecondDeviceInfoFragment : Fragment() {
         })
         is_switch_of_bulb_off.setOnClickListener {
             is_switch_of_bulb_off.hide()
-            fragmentViewModel.commandSend(siteURL, "Relay1On")
+            fragmentViewModel.sendCommandToWS("Relay1On")
         }
         is_switch_of_bulb_on.setOnClickListener {
             is_switch_of_bulb_on.hide()
-            fragmentViewModel.commandSend(siteURL, "Relay1Off")
+            fragmentViewModel.sendCommandToWS("Relay1Off")
         }
+
+        lightingOnImageBottom.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            lightingOnImageBottom.visibility = View.INVISIBLE
+            lightingOffImageBottom.visibility = View.INVISIBLE
+            fragmentViewModel.sendCommandToWS("Relay1Off")
+        }
+        lightingOffImageBottom.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            lightingOnImageBottom.visibility = View.INVISIBLE
+            lightingOffImageBottom.visibility = View.INVISIBLE
+            fragmentViewModel.sendCommandToWS("Relay1On")
+        }
+
         graphTemperatureImageButton.setOnClickListener {
             (context as AppCompatActivity).startActivity(
                 Intent(
@@ -166,8 +180,13 @@ class SecondDeviceInfoFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): SecondDeviceInfoFragment {
-            return SecondDeviceInfoFragment()
+        private const val ARG_DEVICE_NAME = "ARG_DEVICE_NAME"
+        fun newInstance(deviceName: String): SecondDeviceInfoFragment {
+            return SecondDeviceInfoFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_DEVICE_NAME, deviceName)
+                }
+            }
         }
     }
 }

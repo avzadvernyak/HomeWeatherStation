@@ -26,11 +26,11 @@
 
             <ImageView
                     android:id="@+id/temperatureImageView"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
+                    android:contentDescription="@null"
                     app:layout_constraintBottom_toTopOf="@+id/divider1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -49,9 +49,9 @@
 
             <ImageButton
                     android:id="@+id/listTemperatureImageButton"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_list"
                     app:layout_constraintBottom_toBottomOf="@+id/temperatureImageView"
                     app:layout_constraintEnd_toStartOf="@+id/graphTemperatureImageButton"
@@ -59,10 +59,10 @@
 
             <ImageButton
                     android:id="@+id/graphTemperatureImageButton"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_bar_chart"
                     app:layout_constraintBottom_toBottomOf="@+id/temperatureImageView"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -84,11 +84,11 @@
 
             <ImageView
                     android:id="@+id/voltageImageView"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
+                    android:contentDescription="@null"
                     android:tint="@android:color/holo_blue_dark"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider1"
@@ -107,9 +107,9 @@
 
             <ImageButton
                     android:id="@+id/listVoltageImageButton"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_list"
                     app:layout_constraintBottom_toBottomOf="@+id/voltageImageView"
                     app:layout_constraintEnd_toStartOf="@+id/graphVoltageImageButton"
@@ -117,10 +117,10 @@
 
             <ImageButton
                     android:id="@+id/graphVoltageImageButton"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_bar_chart"
                     app:layout_constraintBottom_toBottomOf="@+id/voltageImageView"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -141,11 +141,11 @@
 
             <ImageView
                     android:id="@+id/amperageImageView"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
+                    android:contentDescription="@null"
                     android:tint="@android:color/holo_red_light"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider2"
@@ -164,9 +164,9 @@
 
             <ImageButton
                     android:id="@+id/listAmperageImageButton"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_list"
                     app:layout_constraintBottom_toBottomOf="@+id/amperageImageView"
                     app:layout_constraintEnd_toStartOf="@+id/graphAmperageImageButton"
@@ -174,10 +174,10 @@
 
             <ImageButton
                     android:id="@+id/graphAmperageImageButton"
-                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_bar_chart"
                     app:layout_constraintBottom_toBottomOf="@+id/amperageImageView"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -196,7 +196,68 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/amperageImageView" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/divider3">
 
+                <TextView
+                        android:id="@+id/lightingTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lighting"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/progressBar"
+                        app:layout_constraintEnd_toStartOf="@+id/progressBar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/progressBar" />
+
+                <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                        android:id="@+id/lightingOffImageBottom"
+                        android:contentDescription="@null"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:adjustViewBounds="true"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_lamp_off"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="@id/progressBar"
+                        app:layout_constraintEnd_toEndOf="@id/progressBar"
+                        app:layout_constraintStart_toStartOf="@id/progressBar"
+                        app:layout_constraintTop_toTopOf="@id/progressBar" />
+
+                <ImageButton
+                        android:id="@+id/lightingOnImageBottom"
+                        android:contentDescription="@null"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:adjustViewBounds="true"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_lamp_on"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="@id/progressBar"
+                        app:layout_constraintEnd_toEndOf="@id/progressBar"
+                        app:layout_constraintStart_toStartOf="@id/progressBar"
+                        app:layout_constraintTop_toTopOf="@id/progressBar" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

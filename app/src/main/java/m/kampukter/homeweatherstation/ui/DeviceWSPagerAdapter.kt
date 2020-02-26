@@ -7,22 +7,26 @@ import androidx.fragment.app.FragmentPagerAdapter
 class DeviceWSPagerAdapter(supportFragmentManager: FragmentManager) :
     FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
+    private var deviceName: List<String> = emptyList()
     private val fragments = mutableMapOf<Int, Fragment>()
-    private val titles = mutableMapOf<Int, String>()
 
     override fun getItem(position: Int): Fragment = getFragmentByIndex(position)
 
-    override fun getCount(): Int = 2
+    override fun getCount(): Int = deviceName.size
 
-    override fun getPageTitle(position: Int): CharSequence? = getTitleByIndex(position)
+    override fun getPageTitle(position: Int): CharSequence? = deviceName[position]
 
     private fun getFragmentByIndex(index: Int): Fragment = fragments[index] ?: when (index) {
-        0 -> FirstDeviceInfoFragment.newInstance()
-        else -> SecondDeviceInfoFragment.newInstance()
+        0 -> FirstDeviceInfoFragment.newInstance(deviceName[0])
+        else -> SecondDeviceInfoFragment.newInstance(deviceName[1])
     }.also { fragments[index] = it }
 
-    private fun getTitleByIndex(index: Int): String = titles[index] ?: when (index) {
-        0 -> "ESP8266-1"
-        else -> "ESP8266-1"
-    }.also { titles[index] = it }
+    fun setListDevice(listDevice: List<String>) {
+        deviceName = listDevice
+        notifyDataSetChanged()
+    }
+    fun getListDevice(currentPosition: Int): String = deviceName[currentPosition]
+
+
 }
+//

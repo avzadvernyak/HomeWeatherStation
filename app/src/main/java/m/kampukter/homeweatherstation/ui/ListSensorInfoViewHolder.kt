@@ -10,7 +10,6 @@ class ListSensorInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     fun bind(result: SensorValue) {
         with(itemView) {
             dateTimeTextView.text = DateFormat.format("dd/MM/yyyy HH:mm", result.date * 1000L)
-            //dateTimeTextView.text = result.date.toString()
             valueTextView.text = result.value.toString()
         }
     }
