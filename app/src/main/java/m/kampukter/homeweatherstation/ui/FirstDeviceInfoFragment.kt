@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.first_device_info_fragment.*
+import kotlinx.android.synthetic.main.first_device_info_fragment.lightingOffImageBottom
+import kotlinx.android.synthetic.main.first_device_info_fragment.lightingOnImageBottom
+import kotlinx.android.synthetic.main.first_device_info_fragment.progressBar
 import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
@@ -43,8 +46,7 @@ class FirstDeviceInfoFragment : Fragment() {
         humidityTextView.text = getString(R.string.no_connect_value)
 
         fragmentViewModel.connectStatusWS.observe(this, Observer {
-            is_switch_of_bulb_on.hide()
-            is_switch_of_bulb_off.hide()
+            visibleProgressBar()
         })
 
         fragmentViewModel.messageWS.observe(this, androidx.lifecycle.Observer {
@@ -55,12 +57,13 @@ class FirstDeviceInfoFragment : Fragment() {
                             when (sensor) {
                                 is Sensor.Relay -> {
                                     if (sensor.id == "1") {
+                                        progressBar.visibility = View.INVISIBLE
+                                        lightingOnImageBottom.visibility = View.INVISIBLE
+                                        lightingOffImageBottom.visibility = View.INVISIBLE
                                         if (sensor.state) {
-                                            is_switch_of_bulb_off.hide()
-                                            is_switch_of_bulb_on.show()
+                                            lightingOnImageBottom.visibility = View.VISIBLE
                                         } else {
-                                            is_switch_of_bulb_off.show()
-                                            is_switch_of_bulb_on.hide()
+                                            lightingOffImageBottom.visibility = View.VISIBLE
                                         }
                                     }
                                 }
@@ -104,13 +107,13 @@ class FirstDeviceInfoFragment : Fragment() {
             }
         })
 
-        is_switch_of_bulb_off.setOnClickListener {
-            is_switch_of_bulb_off.hide()
-            fragmentViewModel.sendCommandToWS("Relay1On")
-        }
-        is_switch_of_bulb_on.setOnClickListener {
-            is_switch_of_bulb_on.hide()
+        lightingOnImageBottom.setOnClickListener {
+            visibleProgressBar()
             fragmentViewModel.sendCommandToWS("Relay1Off")
+        }
+        lightingOffImageBottom.setOnClickListener {
+            visibleProgressBar()
+            fragmentViewModel.sendCommandToWS("Relay1On")
         }
 
         graphHumidityImageButton.setOnClickListener {
@@ -186,7 +189,11 @@ class FirstDeviceInfoFragment : Fragment() {
             )
         }
     }
-
+    private fun visibleProgressBar(){
+        progressBar.visibility = View.VISIBLE
+        lightingOnImageBottom.visibility = View.INVISIBLE
+        lightingOffImageBottom.visibility = View.INVISIBLE
+    }
     companion object {
         private const val ARG_DEVICE_NAME = "ARG_DEVICE_NAME"
         fun newInstance(deviceName: String): FirstDeviceInfoFragment {

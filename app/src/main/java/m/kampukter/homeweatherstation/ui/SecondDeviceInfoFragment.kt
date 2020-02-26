@@ -44,8 +44,7 @@ class SecondDeviceInfoFragment : Fragment() {
 
 
         fragmentViewModel.connectStatusWS.observe(this, Observer {
-            is_switch_of_bulb_on.hide()
-            is_switch_of_bulb_off.hide()
+            visibleProgressBar()
         })
         fragmentViewModel.messageWS.observe(this, androidx.lifecycle.Observer {
             when (it) {
@@ -59,12 +58,8 @@ class SecondDeviceInfoFragment : Fragment() {
                                         lightingOnImageBottom.visibility = View.INVISIBLE
                                         lightingOffImageBottom.visibility = View.INVISIBLE
                                         if (sensor.state) {
-                                            is_switch_of_bulb_off.hide()
-                                            is_switch_of_bulb_on.show()
                                             lightingOnImageBottom.visibility = View.VISIBLE
                                         } else {
-                                            is_switch_of_bulb_off.show()
-                                            is_switch_of_bulb_on.hide()
                                             lightingOffImageBottom.visibility = View.VISIBLE
                                         }
                                     }
@@ -101,25 +96,13 @@ class SecondDeviceInfoFragment : Fragment() {
                 }
             }
         })
-        is_switch_of_bulb_off.setOnClickListener {
-            is_switch_of_bulb_off.hide()
-            fragmentViewModel.sendCommandToWS("Relay1On")
-        }
-        is_switch_of_bulb_on.setOnClickListener {
-            is_switch_of_bulb_on.hide()
-            fragmentViewModel.sendCommandToWS("Relay1Off")
-        }
 
         lightingOnImageBottom.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
-            lightingOnImageBottom.visibility = View.INVISIBLE
-            lightingOffImageBottom.visibility = View.INVISIBLE
+            visibleProgressBar()
             fragmentViewModel.sendCommandToWS("Relay1Off")
         }
         lightingOffImageBottom.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
-            lightingOnImageBottom.visibility = View.INVISIBLE
-            lightingOffImageBottom.visibility = View.INVISIBLE
+            visibleProgressBar()
             fragmentViewModel.sendCommandToWS("Relay1On")
         }
 
@@ -177,8 +160,13 @@ class SecondDeviceInfoFragment : Fragment() {
                     .apply { putExtra(EXTRA_MESSAGE, "ESP8266-23") }
             )
         }
-    }
 
+    }
+    private fun visibleProgressBar(){
+        progressBar.visibility = View.VISIBLE
+        lightingOnImageBottom.visibility = View.INVISIBLE
+        lightingOffImageBottom.visibility = View.INVISIBLE
+    }
     companion object {
         private const val ARG_DEVICE_NAME = "ARG_DEVICE_NAME"
         fun newInstance(deviceName: String): SecondDeviceInfoFragment {
