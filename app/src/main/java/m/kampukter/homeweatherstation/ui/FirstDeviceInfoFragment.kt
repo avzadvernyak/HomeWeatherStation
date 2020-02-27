@@ -35,21 +35,15 @@ class FirstDeviceInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.getString("ARG_DEVICE_NAME")?.let {name->
-            fragmentViewModel.setDevice(name)
-            fragmentViewModel.command.observe(this, Observer{})
+        arguments?.getString("ARG_DEVICE_NAME")?.let { name ->
+            fragmentViewModel.setDeviceName(name)
         }
 
-        temperatureOutdoorTextView.text = getString(R.string.no_connect_value)
-        temperatureIndoorTextView.text = getString(R.string.no_connect_value)
-        pressureTextView.text = getString(R.string.no_connect_value)
-        humidityTextView.text = getString(R.string.no_connect_value)
-
-        fragmentViewModel.connectStatusWS.observe(this, Observer {
-            visibleProgressBar()
+        fragmentViewModel.connectionStatusLiveData.observe(this, Observer {
+            visibleLightingProgressBar()
         })
 
-        fragmentViewModel.messageWS.observe(this, androidx.lifecycle.Observer {
+        fragmentViewModel.webSocketMessageLiveData.observe(this, androidx.lifecycle.Observer {
             when (it) {
                 is DeviceInteractionApi.Message.DeviceInfo -> {
                     with(it.content) {
@@ -106,14 +100,12 @@ class FirstDeviceInfoFragment : Fragment() {
                 }
             }
         })
-
+        fragmentViewModel.isCommandSentLiveData.observe(this, Observer { visibleLightingProgressBar() })
         lightingOnImageBottom.setOnClickListener {
-            visibleProgressBar()
-            fragmentViewModel.sendCommandToWS("Relay1Off")
+            fragmentViewModel.sendCommandToDevice("Relay1Off")
         }
         lightingOffImageBottom.setOnClickListener {
-            visibleProgressBar()
-            fragmentViewModel.sendCommandToWS("Relay1On")
+            fragmentViewModel.sendCommandToDevice("Relay1On")
         }
 
         graphHumidityImageButton.setOnClickListener {
@@ -189,11 +181,21 @@ class FirstDeviceInfoFragment : Fragment() {
             )
         }
     }
-    private fun visibleProgressBar(){
+
+    private fun visibleLightingProgressBar() {
+
+        val noConnect: String = getString(R.string.no_connect_value)
+
         progressBar.visibility = View.VISIBLE
         lightingOnImageBottom.visibility = View.INVISIBLE
         lightingOffImageBottom.visibility = View.INVISIBLE
+
+        temperatureOutdoorTextView.text = noConnect
+        temperatureIndoorTextView.text = noConnect
+        pressureTextView.text = noConnect
+        humidityTextView.text = noConnect
     }
+
     companion object {
         private const val ARG_DEVICE_NAME = "ARG_DEVICE_NAME"
         fun newInstance(deviceName: String): FirstDeviceInfoFragment {

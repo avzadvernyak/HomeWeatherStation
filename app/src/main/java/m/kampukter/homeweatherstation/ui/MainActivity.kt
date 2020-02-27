@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = DeviceWSPagerAdapter(supportFragmentManager)
         viewModel.devices.observe(this, Observer {
             adapter.setListDevice(it)
-            viewModel.setDevice(adapter.getListDevice(0))
+            viewModel.setDeviceName(adapter.getListDevice(0))
         })
 
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -57,12 +57,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                viewModel.setDevice(adapter.getListDevice(position))
+                viewModel.setDeviceName(adapter.getListDevice(position))
             }
         })
         viewPager.adapter = adapter
 
-        viewModel.connectStatusWS.observe(this, Observer { status ->
+        viewModel.connectionStatusLiveData.observe(this, Observer { status ->
             statusTextView.visibility = View.INVISIBLE
             failedTextView.visibility = View.INVISIBLE
             failedMsgTextView.visibility = View.INVISIBLE

@@ -1,5 +1,6 @@
 package m.kampukter.homeweatherstation
 
+import android.util.Log
 import androidx.lifecycle.*
 import m.kampukter.homeweatherstation.data.SensorRequest
 import m.kampukter.homeweatherstation.data.ResultSensorValue
@@ -12,15 +13,11 @@ class MyViewModel(
     private val webSocketRepository: WebSocketRepository,
     private val sensorRepository: SensorRepository
 ) : ViewModel() {
-    // New все что касается WS
 
+    // New все что касается WS
     val devices = webSocketRepository.getDevices()
 
-    private val _deviceName = MutableLiveData<String>()
-    fun setDevice(name: String) {
-        _deviceName.postValue(name)
 
-    }
 
     fun connectToDevices() {
         webSocketRepository.connectToDevices()
@@ -30,28 +27,40 @@ class MyViewModel(
         webSocketRepository.disconnectToAllDevices()
     }
 
-    val connectStatusWS: LiveData<DeviceInteractionApi.ConnectionStatus> =
+    private val _deviceName = MutableLiveData<String>()
+    fun setDeviceName(name: String) {
+        _deviceName.postValue(name)
+    }
+
+    val connectionStatusLiveData: LiveData<DeviceInteractionApi.ConnectionStatus> =
         Transformations.switchMap(_deviceName) { name -> webSocketRepository.webSocketStatus(name) }
-    val messageWS: LiveData<DeviceInteractionApi.Message> =
+    val webSocketMessageLiveData: LiveData<DeviceInteractionApi.Message> =
         Transformations.switchMap(_deviceName) { name ->
             webSocketRepository.getMessage(name)
         }
 
     private val lastCommand = MutableLiveData<String>()
-    fun sendCommandToWS(command: String) { lastCommand.postValue(command)}
-    val command = MediatorLiveData<Any>().apply {
+    fun sendCommandToDevice(command: String) {
+        lastCommand.postValue(command)
+    }
+
+    val isCommandSentLiveData: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
         var lastDeviceName: String? = null
         addSource(_deviceName) { deviceName ->
             lastDeviceName = deviceName
         }
         addSource(lastCommand) { command ->
-            lastDeviceName?.let{webSocketRepository.commandSend(it, command)}
+            lastDeviceName?.let {
+                webSocketRepository.commandSend(it, command)
+                postValue(true)
+            }
         }
     }
 
     fun setNetwork(network: Int) {
         webSocketRepository.setNetwork(network)
     }
+
     // Это все что касается сохраненных на сайте данных
     private val searchData = MutableLiveData<SensorRequest>()
     private val resultSensorValue: LiveData<ResultSensorValue> =

@@ -34,19 +34,13 @@ class SecondDeviceInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.getString("ARG_DEVICE_NAME")?.let {
-            fragmentViewModel.setDevice(it)
-            fragmentViewModel.command.observe(this, Observer{})
+            fragmentViewModel.setDeviceName(it)
         }
 
-        temperatureTextView.text = getString(R.string.no_connect_value)
-        voltageTextView.text = getString(R.string.no_connect_value)
-        amperageTextView.text = getString(R.string.no_connect_value)
-
-
-        fragmentViewModel.connectStatusWS.observe(this, Observer {
-            visibleProgressBar()
+        fragmentViewModel.connectionStatusLiveData.observe(this, Observer {
+            visibleLightingProgressBar()
         })
-        fragmentViewModel.messageWS.observe(this, androidx.lifecycle.Observer {
+        fragmentViewModel.webSocketMessageLiveData.observe(this, androidx.lifecycle.Observer {
             when (it) {
                 is DeviceInteractionApi.Message.DeviceInfo -> {
                     with(it.content) {
@@ -96,14 +90,13 @@ class SecondDeviceInfoFragment : Fragment() {
                 }
             }
         })
+        fragmentViewModel.isCommandSentLiveData.observe(this, Observer { visibleLightingProgressBar() })
 
         lightingOnImageBottom.setOnClickListener {
-            visibleProgressBar()
-            fragmentViewModel.sendCommandToWS("Relay1Off")
+            fragmentViewModel.sendCommandToDevice("Relay1Off")
         }
         lightingOffImageBottom.setOnClickListener {
-            visibleProgressBar()
-            fragmentViewModel.sendCommandToWS("Relay1On")
+            fragmentViewModel.sendCommandToDevice("Relay1On")
         }
 
         graphTemperatureImageButton.setOnClickListener {
@@ -162,11 +155,20 @@ class SecondDeviceInfoFragment : Fragment() {
         }
 
     }
-    private fun visibleProgressBar(){
+
+    private fun visibleLightingProgressBar() {
+
+        val noConnect: String = getString(R.string.no_connect_value)
+
         progressBar.visibility = View.VISIBLE
         lightingOnImageBottom.visibility = View.INVISIBLE
         lightingOffImageBottom.visibility = View.INVISIBLE
+
+        temperatureTextView.text = noConnect
+        voltageTextView.text = noConnect
+        amperageTextView.text = noConnect
     }
+
     companion object {
         private const val ARG_DEVICE_NAME = "ARG_DEVICE_NAME"
         fun newInstance(deviceName: String): SecondDeviceInfoFragment {
