@@ -2,8 +2,8 @@ package m.kampukter.homeweatherstation.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import m.kampukter.homeweatherstation.Constants.LAN
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
+import m.kampukter.homeweatherstation.ui.LAN
 import java.net.URL
 
 class WebSocketRepository(

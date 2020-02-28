@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.second_device_info_fragment.*
-import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.Sensor
@@ -105,7 +104,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-21") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_GRAPH, "ESP8266-21") }
             )
         }
         listTemperatureImageButton.setOnClickListener {
@@ -114,7 +113,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-21") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_LIST, "ESP8266-21") }
             )
         }
         graphVoltageImageButton.setOnClickListener {
@@ -123,7 +122,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-22") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_GRAPH, "ESP8266-22") }
             )
         }
         listVoltageImageButton.setOnClickListener {
@@ -132,7 +131,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-22") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_LIST, "ESP8266-22") }
             )
         }
         graphAmperageImageButton.setOnClickListener {
@@ -141,7 +140,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-23") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_GRAPH, "ESP8266-23") }
             )
         }
         listAmperageImageButton.setOnClickListener {
@@ -150,7 +149,7 @@ class SecondDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-23") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_LIST, "ESP8266-23") }
             )
         }
 

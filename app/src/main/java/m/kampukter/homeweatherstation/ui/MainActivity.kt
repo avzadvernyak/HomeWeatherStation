@@ -8,14 +8,15 @@ import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.main_activity.*
-import m.kampukter.homeweatherstation.Constants.LAN
-import m.kampukter.homeweatherstation.Constants.LOCAL_SSID
-import m.kampukter.homeweatherstation.Constants.WAN
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.NetworkLiveData
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.dto.DeviceInteractionApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+const val LOCAL_SSID = "\"Orbis-D1360\""
+const val LAN = 0
+const val WAN = 1
 
 class MainActivity : AppCompatActivity() {
 

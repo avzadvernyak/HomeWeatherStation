@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.first_device_info_fragment.*
 import kotlinx.android.synthetic.main.first_device_info_fragment.lightingOffImageBottom
 import kotlinx.android.synthetic.main.first_device_info_fragment.lightingOnImageBottom
 import kotlinx.android.synthetic.main.first_device_info_fragment.progressBar
-import m.kampukter.homeweatherstation.Constants.EXTRA_MESSAGE
 import m.kampukter.homeweatherstation.MyViewModel
 import m.kampukter.homeweatherstation.R
 import m.kampukter.homeweatherstation.data.Sensor
@@ -114,7 +113,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-13") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_GRAPH, "ESP8266-13") }
             )
         }
         listHumidityImageButton.setOnClickListener {
@@ -123,7 +122,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-13") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_LIST, "ESP8266-13") }
             )
         }
         graphTempOutdoorImageButton.setOnClickListener {
@@ -132,7 +131,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-10") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_GRAPH, "ESP8266-10") }
             )
         }
         listTempOutdoorImageButton.setOnClickListener {
@@ -141,7 +140,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-10") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_LIST, "ESP8266-10") }
             )
         }
         graphPressureImageButton.setOnClickListener {
@@ -150,7 +149,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-12") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_GRAPH, "ESP8266-12") }
             )
         }
         listPressureImageButton.setOnClickListener {
@@ -159,7 +158,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-12") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_LIST, "ESP8266-12") }
             )
         }
         graphTemperatureIndoorImageButton.setOnClickListener {
@@ -168,7 +167,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     GraphSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-11") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_GRAPH, "ESP8266-11") }
             )
         }
         listTemperatureIndoorImageButton.setOnClickListener {
@@ -177,7 +176,7 @@ class FirstDeviceInfoFragment : Fragment() {
                     context,
                     ListSensorInfoActivity::class.java
                 )
-                    .apply { putExtra(EXTRA_MESSAGE, "ESP8266-11") }
+                    .apply { putExtra(EXTRA_MESSAGE_SENSOR_LIST, "ESP8266-11") }
             )
         }
     }
