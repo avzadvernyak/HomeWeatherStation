@@ -1,6 +1,5 @@
 package m.kampukter.homeweatherstation.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
@@ -32,12 +31,6 @@ class GraphSensorInfoFragment : Fragment() {
         DateFormat.format("yyyy-MM-dd", Date(Date().time - (1000 * 60 * 60 * 24))).toString()
     private var strDateEnd: String = DateFormat.format("yyyy-MM-dd", Date()).toString()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        arguments?.getString("ARG_MESSAGE")?.let {
-            viewModel.setQuestionSensorValue(SensorRequest(it, strDateBegin, strDateEnd))
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +56,9 @@ class GraphSensorInfoFragment : Fragment() {
                 strDateEnd = saveDate[1]
             }
         }
-
+        arguments?.getString("ARG_MESSAGE")?.let {
+            viewModel.setQuestionSensorValue(SensorRequest(it, strDateBegin, strDateEnd))
+        }
         val series: LineGraphSeries<DataPoint> = LineGraphSeries()
         progressBar.visibility = View.VISIBLE
 

@@ -34,16 +34,22 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
     private val webSocketListener = object : WebSocketListener() {
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            isDisconnect[webSocket.getUrl()]?.let {
+            super.onClosing(webSocket, code, reason)
+
+            connectionStatusLiveDatas[webSocket.getUrl()]?.postValue(DeviceInteractionApi.ConnectionStatus.Disconnected)
+            webSockets.remove(webSocket.getUrl())
+
+            /*isDisconnect[webSocket.getUrl()]?.let {
                 if (!it) disconnect(webSocket.getUrl())
-            }
+            }*/
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            connectionStatusLiveDatas[webSocket.getUrl()]?.postValue(DeviceInteractionApi.ConnectionStatus.Disconnected)
+
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            super.onFailure(webSocket, t, response)
             connectionStatusLiveDatas[webSocket.getUrl()]?.postValue(
                 DeviceInteractionApi.ConnectionStatus.Failed(
                     t.message
@@ -114,7 +120,7 @@ class WebSocketDeviceInteractionApi : DeviceInteractionApi {
     override fun disconnect(url: URL) {
         isDisconnect[url] = true
         GlobalScope.launch {
-            delay(5000)
+            delay(10000)
             isDisconnect[url]?.let {
                 if (it) {
                     webSockets[url]?.close(1000, null)
